@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { LogoutButton } from "@/components/LogoutButton";
 import { NoticeManager } from "@/components/NoticeManager";
+import { TenantManager } from "@/components/TenantManager";
 
 export default async function AdminPage() {
   const supabase = await createClient();
@@ -24,7 +25,10 @@ export default async function AdminPage() {
         <LogoutButton />
       </header>
 
-      <NoticeManager />
+      <div className="flex flex-col gap-8">
+        <TenantManager />
+        <NoticeManager />
+      </div>
     </main>
   );
 }

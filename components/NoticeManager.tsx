@@ -35,8 +35,10 @@ export function NoticeManager() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [sendingId, setSendingId] = useState<string | null>(null);
+  const [sendResult, setSendResult] = useState<Record<string, string>>({});
+
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOrigin(window.location.origin);
   }, []);
 
@@ -51,7 +53,6 @@ export function NoticeManager() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadNotices();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -115,6 +116,28 @@ export function NoticeManager() {
     await supabase.from("notices").delete().eq("id", id);
     if (editingId === id) resetForm();
     await loadNotices();
+  };
+
+  const handleSendSms = async (id: string) => {
+    setSendingId(id);
+    setSendResult((prev) => ({ ...prev, [id]: "" }));
+    try {
+      const res = await fetch(`/api/notices/${id}/send-sms`, { method: "POST" });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "문자 발송에 실패했습니다");
+      const modeLabel = json.mock ? " (Mock 모드 — 실제 발송 아님, 콘솔 로그 확인)" : "";
+      setSendResult((prev) => ({
+        ...prev,
+        [id]: `${json.sent}/${json.total}명에게 발송 완료${modeLabel}`,
+      }));
+    } catch (e) {
+      setSendResult((prev) => ({
+        ...prev,
+        [id]: e instanceof Error ? e.message : "문자 발송에 실패했습니다",
+      }));
+    } finally {
+      setSendingId(null);
+    }
   };
 
   return (
@@ -196,6 +219,20 @@ export function NoticeManager() {
                 <p className="text-sm text-neutral-700 whitespace-pre-line mb-3">
                   {notice.body_ko}
                 </p>
+                <div className="mb-3">
+                  <button
+                    onClick={() => handleSendSms(notice.id)}
+                    disabled={sendingId === notice.id}
+                    className="px-3 py-1.5 rounded-lg border border-neutral-300 text-neutral-700 text-xs font-semibold hover:bg-neutral-50 disabled:opacity-50 transition-colors"
+                  >
+                    {sendingId === notice.id ? "발송 중..." : "📱 문자로 발송"}
+                  </button>
+                  {sendResult[notice.id] && (
+                    <p className="text-xs text-neutral-500 mt-1">
+                      {sendResult[notice.id]}
+                    </p>
+                  )}
+                </div>
                 <div className="flex flex-col sm:flex-row gap-3 items-start">
                   <QrCodeImage
                     value={link}
