@@ -9,6 +9,7 @@ import { PLACES } from "@/lib/data/places";
 import { TemplateGroup } from "@/lib/types";
 import { CopyButton } from "@/components/CopyButton";
 import { QrCodeImage } from "@/components/QrCodeImage";
+import { CustomNoticeTranslator } from "@/components/CustomNoticeTranslator";
 
 const GROUP_ORDER: TemplateGroup[] = ["trash", "moveout", "notice"];
 const GROUP_LABEL_KEY = {
@@ -97,6 +98,8 @@ export default function LandlordPage() {
           <p className="text-xs text-neutral-500 mt-2">{t("ko", "legalNoticeInline")}</p>
         )}
       </section>
+
+      <CustomNoticeTranslator />
 
       <section className="mb-6 rounded-2xl border border-neutral-200 bg-white p-4">
         <h2 className="font-bold mb-3">{t("ko", "linkSectionTitle")}</h2>
