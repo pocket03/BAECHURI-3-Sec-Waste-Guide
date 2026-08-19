@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { LogoutButton } from "@/components/LogoutButton";
+import { NoticeManager } from "@/components/NoticeManager";
 
 export default async function AdminPage() {
   const supabase = await createClient();
@@ -23,9 +24,7 @@ export default async function AdminPage() {
         <LogoutButton />
       </header>
 
-      <div className="rounded-2xl border border-neutral-200 bg-white p-6 text-center text-neutral-500">
-        로그인 성공. 공지사항 작성·수정 기능은 다음 단계에서 여기에 추가됩니다.
-      </div>
+      <NoticeManager />
     </main>
   );
 }

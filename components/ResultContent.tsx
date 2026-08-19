@@ -1,14 +1,28 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useLanguage } from "@/lib/language-context";
+import { Lang } from "@/lib/types";
 import { t } from "@/lib/i18n";
 import { ITEMS } from "@/lib/data/items";
 import { PLACES } from "@/lib/data/places";
 import { TEMPLATES, LEGAL_NOTICE_TEXT } from "@/lib/data/templates";
 import { CATEGORIES } from "@/lib/data/categories";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { createClient } from "@/lib/supabase/client";
+import { Notice } from "@/lib/notices";
+
+function noticeBodyForLang(notice: Notice, lang: Lang): string {
+  const byLang: Record<Lang, string | null> = {
+    ko: notice.body_ko,
+    en: notice.body_en,
+    zh: notice.body_zh,
+    vi: notice.body_vi,
+  };
+  return byLang[lang] || notice.body_ko;
+}
 
 function PageShell({ children }: { children: React.ReactNode }) {
   const { lang, ready } = useLanguage();
@@ -44,6 +58,7 @@ export function ResultContent() {
   const itemId = params.get("item");
   const placeId = params.get("place");
   const noticeId = params.get("notice");
+  const customId = params.get("custom");
 
   if (itemId) {
     const item = ITEMS.find((i) => i.id === itemId);
@@ -144,9 +159,59 @@ export function ResultContent() {
     );
   }
 
+  if (customId) {
+    return <CustomNoticeResult id={customId} lang={lang} />;
+  }
+
   return (
     <PageShell>
       <NotFound lang={lang} />
+    </PageShell>
+  );
+}
+
+function CustomNoticeResult({ id, lang }: { id: string; lang: Lang }) {
+  const [notice, setNotice] = useState<Notice | null | undefined>(undefined);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase
+      .from("notices")
+      .select("*")
+      .eq("id", id)
+      .single()
+      .then(({ data }) => {
+        setNotice((data as Notice | null) ?? null);
+      });
+  }, [id]);
+
+  if (notice === undefined) {
+    return (
+      <PageShell>
+        <div className="rounded-3xl border border-neutral-200 bg-white p-10 text-center text-neutral-400 animate-pulse">
+          ...
+        </div>
+      </PageShell>
+    );
+  }
+
+  if (notice === null) {
+    return (
+      <PageShell>
+        <NotFound lang={lang} />
+      </PageShell>
+    );
+  }
+
+  return (
+    <PageShell>
+      <div className="rounded-3xl border border-neutral-200 bg-white p-6">
+        <div className="text-4xl mb-3 text-center">📢</div>
+        <h1 className="text-xl font-extrabold text-center mb-4">{notice.title}</h1>
+        <div className="rounded-2xl bg-neutral-50 p-4 text-sm leading-relaxed whitespace-pre-line">
+          {noticeBodyForLang(notice, lang)}
+        </div>
+      </div>
     </PageShell>
   );
 }
