@@ -147,6 +147,15 @@ export default function LandlordPage() {
       </section>
 
       <p className="text-xs text-neutral-400 text-center">{t("ko", "demoModeNotice")}</p>
+
+      <div className="text-center mt-4">
+        <Link
+          href="/admin"
+          className="text-xs text-neutral-400 underline underline-offset-2"
+        >
+          집주인 관리자 로그인
+        </Link>
+      </div>
     </main>
   );
 }
