@@ -24,7 +24,10 @@ export function BuildingProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored) setBuildingIdState(stored);
+    if (stored) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setBuildingIdState(stored);
+    }
     setReady(true);
   }, []);
 

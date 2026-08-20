@@ -43,6 +43,7 @@ export function FaqChat({ lang }: { lang: Lang }) {
     if (!ready) return;
 
     if (!buildingId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFaqs(STATIC_FAQ.map((f) => ({ id: f.id, question: f.question[lang], answer: f.answer[lang] })));
       return;
     }

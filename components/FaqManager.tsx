@@ -38,6 +38,7 @@ export function FaqManager({ userId }: { userId: string }) {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadFaqs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

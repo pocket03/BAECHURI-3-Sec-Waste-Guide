@@ -5,6 +5,7 @@ import { NoticeManager } from "@/components/NoticeManager";
 import { TenantManager } from "@/components/TenantManager";
 import { FaqManager } from "@/components/FaqManager";
 import { BuildingQrCard } from "@/components/BuildingQrCard";
+import { BuildingSettingsManager } from "@/components/BuildingSettingsManager";
 
 export default async function AdminPage() {
   const supabase = await createClient();
@@ -29,6 +30,7 @@ export default async function AdminPage() {
 
       <div className="flex flex-col gap-8">
         <BuildingQrCard userId={user.id} />
+        <BuildingSettingsManager userId={user.id} />
         <TenantManager userId={user.id} />
         <FaqManager userId={user.id} />
         <NoticeManager userId={user.id} />
