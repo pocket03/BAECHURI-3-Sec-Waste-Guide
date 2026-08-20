@@ -56,15 +56,18 @@ export function BuildingSettingsManager({ userId }: { userId: string }) {
       const trimmed = bannerKo.trim();
       const translated = trimmed ? await translate(trimmed) : null;
 
-      await supabase.from("building_settings").upsert({
-        landlord_id: userId,
-        recycling_days: days,
-        banner_ko: trimmed || null,
-        banner_en: translated?.en ?? null,
-        banner_zh: translated?.zh ?? null,
-        banner_vi: translated?.vi ?? null,
-        updated_at: new Date().toISOString(),
-      });
+      const { error: saveError } = await supabase
+        .from("building_settings")
+        .upsert({
+          landlord_id: userId,
+          recycling_days: days,
+          banner_ko: trimmed || null,
+          banner_en: translated?.en ?? null,
+          banner_zh: translated?.zh ?? null,
+          banner_vi: translated?.vi ?? null,
+          updated_at: new Date().toISOString(),
+        });
+      if (saveError) throw saveError;
       setSaved(true);
     } catch (e) {
       setError(e instanceof Error ? e.message : "저장에 실패했습니다");

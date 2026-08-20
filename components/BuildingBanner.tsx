@@ -19,7 +19,11 @@ export function BuildingBanner({ lang }: { lang: Lang }) {
       .select("*")
       .eq("landlord_id", buildingId)
       .maybeSingle()
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        if (error) {
+          console.error("[BuildingBanner] failed to load banner:", error);
+          return;
+        }
         const settings = data as BuildingSettings | null;
         const byLang: Record<Lang, string | null> = {
           ko: settings?.banner_ko ?? null,
