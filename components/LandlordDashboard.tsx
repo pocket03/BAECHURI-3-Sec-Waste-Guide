@@ -23,6 +23,16 @@ const GROUP_LABEL_KEY = {
   notice: "groupNotice",
 } as const;
 
+const TABS = [
+  { key: "send", icon: "📤", label: "발송" },
+  { key: "notices", icon: "📋", label: "공지사항" },
+  { key: "faq", icon: "💬", label: "FAQ" },
+  { key: "tenants", icon: "👥", label: "세입자" },
+  { key: "settings", icon: "⚙️", label: "건물 설정" },
+] as const;
+
+type TabKey = (typeof TABS)[number]["key"];
+
 export function LandlordDashboard({
   userId,
   userEmail,
@@ -30,6 +40,7 @@ export function LandlordDashboard({
   userId: string;
   userEmail: string;
 }) {
+  const [tab, setTab] = useState<TabKey>("send");
   const [selectedId, setSelectedId] = useState(TEMPLATES[0].id);
   const selected = TEMPLATES.find((tpl) => tpl.id === selectedId) ?? TEMPLATES[0];
 
@@ -54,97 +65,123 @@ export function LandlordDashboard({
   }, [selected, noticeLink]);
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-8 sm:py-12">
-      <header className="mb-8 flex items-start justify-between gap-3">
-        <div>
-          <p className="text-sm font-semibold text-green-700">
-            {t("ko", "brand")}
-          </p>
-          <h1 className="text-2xl font-extrabold mt-1">{t("ko", "landlordTitle")}</h1>
-          <p className="text-neutral-600 mt-2 text-sm leading-relaxed">
-            {t("ko", "landlordSubtitle")}
-          </p>
-          <p className="text-neutral-400 mt-1 text-xs">{userEmail}로 로그인됨</p>
-        </div>
-        <LogoutButton />
-      </header>
+    <div className="min-h-screen bg-neutral-50">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 py-8">
+        <header className="mb-6 flex items-start justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold text-green-700">
+              {t("ko", "brand")}
+            </p>
+            <h1 className="text-2xl font-extrabold mt-1">{t("ko", "landlordTitle")}</h1>
+            <p className="text-neutral-500 mt-1 text-xs">{userEmail}로 로그인됨</p>
+          </div>
+          <LogoutButton />
+        </header>
 
-      <BuildingQrCard userId={userId} />
+        <nav className="mb-8 flex gap-1 overflow-x-auto border-b border-neutral-200">
+          {TABS.map((item) => (
+            <button
+              key={item.key}
+              onClick={() => setTab(item.key)}
+              className={`shrink-0 flex items-center gap-1.5 px-4 py-3 text-sm font-semibold border-b-2 transition-colors ${
+                tab === item.key
+                  ? "border-green-600 text-green-700"
+                  : "border-transparent text-neutral-500 hover:text-neutral-800"
+              }`}
+            >
+              <span>{item.icon}</span>
+              {item.label}
+            </button>
+          ))}
+        </nav>
 
-      <div className="mt-8">
-        <BuildingSettingsManager userId={userId} />
-      </div>
+        {tab === "send" && (
+          <div className="grid lg:grid-cols-2 gap-6 items-start">
+            <div className="flex flex-col gap-6">
+              <section className="rounded-2xl border border-neutral-200 bg-white p-5">
+                <h2 className="font-bold mb-1">알림톡 템플릿 선택</h2>
+                <p className="text-xs text-neutral-500 mb-4">
+                  {t("ko", "landlordSubtitle")}
+                </p>
+                {GROUP_ORDER.map((group) => (
+                  <div key={group} className="mb-4 last:mb-0">
+                    <h3 className="text-xs font-bold text-neutral-500 mb-2">
+                      {t("ko", GROUP_LABEL_KEY[group])}
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {TEMPLATES.filter((tpl) => tpl.group === group).map((tpl) => (
+                        <button
+                          key={tpl.id}
+                          onClick={() => setSelectedId(tpl.id)}
+                          className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
+                            tpl.id === selectedId
+                              ? "bg-green-600 text-white border-green-600"
+                              : "bg-white text-neutral-700 border-neutral-300 hover:border-green-400"
+                          }`}
+                        >
+                          {tpl.title.ko}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </section>
 
-      <div className="mt-8">
-        <TenantManager userId={userId} />
-      </div>
+              <CustomNoticeTranslator />
+            </div>
 
-      <div className="mt-8">
-        <FaqManager userId={userId} />
-      </div>
+            <div className="flex flex-col gap-6">
+              <section className="rounded-2xl border border-neutral-200 bg-white p-5">
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="font-bold">{t("ko", "previewTitle")}</h2>
+                  <CopyButton
+                    text={combinedMessage}
+                    label={t("ko", "copyAllButton")}
+                    copiedLabel={t("ko", "copiedToast")}
+                  />
+                </div>
+                <div className="rounded-xl bg-[#b2c7da] p-3">
+                  <div className="rounded-lg rounded-tl-none bg-white px-4 py-3 text-sm whitespace-pre-line leading-relaxed shadow-sm">
+                    {combinedMessage}
+                  </div>
+                </div>
+                {selected.legalNotice && (
+                  <p className="text-xs text-neutral-500 mt-2">
+                    {t("ko", "legalNoticeInline")}
+                  </p>
+                )}
+              </section>
 
-      <div className="mt-8 mb-8">
-        <NoticeManager userId={userId} />
-      </div>
-
-      <section className="mb-6">
-        <h2 className="text-lg font-bold mb-2">알림톡 템플릿으로 빠르게 보내기</h2>
-        {GROUP_ORDER.map((group) => (
-          <div key={group} className="mb-4">
-            <h3 className="text-sm font-bold text-neutral-500 mb-2">
-              {t("ko", GROUP_LABEL_KEY[group])}
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {TEMPLATES.filter((tpl) => tpl.group === group).map((tpl) => (
-                <button
-                  key={tpl.id}
-                  onClick={() => setSelectedId(tpl.id)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
-                    tpl.id === selectedId
-                      ? "bg-green-600 text-white border-green-600"
-                      : "bg-white text-neutral-700 border-neutral-300 hover:border-green-400"
-                  }`}
-                >
-                  {tpl.title.ko}
-                </button>
-              ))}
+              <section className="rounded-2xl border border-neutral-200 bg-white p-5">
+                <h2 className="font-bold mb-1">{t("ko", "siteQrSectionTitle")}</h2>
+                <p className="text-xs text-neutral-500 mb-3">
+                  {t("ko", "siteQrSectionDesc")}
+                </p>
+                <QrCodeImage
+                  value={siteQrLink}
+                  downloadLabel={t("ko", "downloadQrButton")}
+                  fileName="baechuri-site-qr.png"
+                />
+              </section>
             </div>
           </div>
-        ))}
-      </section>
-
-      <section className="mb-6 rounded-2xl border border-neutral-200 bg-white p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-bold">{t("ko", "previewTitle")}</h2>
-          <CopyButton
-            text={combinedMessage}
-            label={t("ko", "copyAllButton")}
-            copiedLabel={t("ko", "copiedToast")}
-          />
-        </div>
-        <div className="rounded-xl bg-[#b2c7da] p-3">
-          <div className="rounded-lg rounded-tl-none bg-white px-4 py-3 text-sm whitespace-pre-line leading-relaxed shadow-sm">
-            {combinedMessage}
-          </div>
-        </div>
-        {selected.legalNotice && (
-          <p className="text-xs text-neutral-500 mt-2">{t("ko", "legalNoticeInline")}</p>
         )}
-      </section>
 
-      <CustomNoticeTranslator />
+        {tab === "notices" && <NoticeManager userId={userId} />}
+        {tab === "faq" && <FaqManager userId={userId} />}
+        {tab === "tenants" && <TenantManager userId={userId} />}
 
-      <section className="mb-6 rounded-2xl border border-neutral-200 bg-white p-4">
-        <h2 className="font-bold mb-1">{t("ko", "siteQrSectionTitle")}</h2>
-        <p className="text-xs text-neutral-500 mb-3">{t("ko", "siteQrSectionDesc")}</p>
-        <QrCodeImage
-          value={siteQrLink}
-          downloadLabel={t("ko", "downloadQrButton")}
-          fileName="baechuri-site-qr.png"
-        />
-      </section>
+        {tab === "settings" && (
+          <div className="grid lg:grid-cols-2 gap-6 items-start">
+            <BuildingQrCard userId={userId} />
+            <BuildingSettingsManager userId={userId} />
+          </div>
+        )}
 
-      <p className="text-xs text-neutral-400 text-center">{t("ko", "demoModeNotice")}</p>
-    </main>
+        <p className="text-xs text-neutral-400 text-center mt-10">
+          {t("ko", "demoModeNotice")}
+        </p>
+      </div>
+    </div>
   );
 }
