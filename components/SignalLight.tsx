@@ -13,6 +13,7 @@ export function SignalLight({ lang }: { lang: Lang }) {
   const { buildingId, ready } = useBuilding();
   // 서버/클라이언트 렌더링 시점의 날짜 불일치를 피하기 위해 마운트 후에 계산합니다.
   const [green, setGreen] = useState<boolean | null>(null);
+  const [banner, setBanner] = useState<string | null>(null);
 
   useEffect(() => {
     if (!ready) return;
@@ -29,15 +30,42 @@ export function SignalLight({ lang }: { lang: Lang }) {
       .select("*")
       .eq("landlord_id", buildingId)
       .maybeSingle()
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        if (error) {
+          console.error("[SignalLight] failed to load building settings:", error);
+          setGreen(isRecyclingDay(RECYCLING_DAYS));
+          return;
+        }
         const settings = data as BuildingSettings | null;
+        const byLang: Record<Lang, string | null> = {
+          ko: settings?.banner_ko ?? null,
+          en: settings?.banner_en ?? null,
+          zh: settings?.banner_zh ?? null,
+          vi: settings?.banner_vi ?? null,
+        };
+        setBanner(byLang[lang] || settings?.banner_ko || null);
         setGreen(isRecyclingDay(settings?.recycling_days ?? RECYCLING_DAYS));
       });
-  }, [buildingId, ready]);
+  }, [buildingId, ready, lang]);
 
   if (green === null) {
     return (
       <div className="rounded-2xl border border-neutral-200 bg-white p-4 animate-pulse h-24" />
+    );
+  }
+
+  // 집주인이 공지 배너를 설정해두면, 이 칸이 신호등 대신 공지 배너로 표시됩니다.
+  if (banner) {
+    return (
+      <div className="rounded-2xl p-4 flex items-start gap-3 border bg-amber-50 border-amber-300">
+        <div className="text-2xl leading-none">📢</div>
+        <div className="flex-1">
+          <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">
+            공지
+          </p>
+          <p className="text-sm text-amber-900 whitespace-pre-line mt-1">{banner}</p>
+        </div>
+      </div>
     );
   }
 

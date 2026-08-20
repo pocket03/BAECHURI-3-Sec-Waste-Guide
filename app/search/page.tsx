@@ -4,7 +4,6 @@ import { useLanguage } from "@/lib/language-context";
 import { t } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { SignalLight } from "@/components/SignalLight";
-import { BuildingBanner } from "@/components/BuildingBanner";
 import { FaqChat } from "@/components/FaqChat";
 import { ItemGrid } from "@/components/ItemGrid";
 
@@ -25,8 +24,6 @@ export default function SearchPage() {
       <div className="mb-5">
         <LanguageSwitcher />
       </div>
-
-      <BuildingBanner lang={lang} />
 
       <div className="mb-6">
         <SignalLight lang={lang} />
