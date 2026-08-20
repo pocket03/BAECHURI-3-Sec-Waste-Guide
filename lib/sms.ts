@@ -23,11 +23,26 @@ export async function sendSms(to: string, text: string): Promise<SmsResult> {
     await messageService.send({ to, from: senderNumber, text });
     return { to, success: true, mock: false };
   } catch (e) {
-    return {
-      to,
-      success: false,
-      mock: false,
-      error: e instanceof Error ? e.message : "문자 발송에 실패했습니다",
-    };
+    const error = extractSolapiError(e);
+    console.error(`[SMS FAILED] to ${to}:`, error, e);
+    return { to, success: false, mock: false, error };
   }
+}
+
+function extractSolapiError(e: unknown): string {
+  if (e && typeof e === "object") {
+    const err = e as {
+      message?: string;
+      errorMessage?: string;
+      failedMessageList?: { statusMessage?: string; statusCode?: string }[];
+    };
+    if (err.failedMessageList?.length) {
+      return err.failedMessageList
+        .map((f) => `${f.statusCode ?? ""} ${f.statusMessage ?? ""}`.trim())
+        .join(", ");
+    }
+    if (err.errorMessage) return err.errorMessage;
+    if (err.message) return err.message;
+  }
+  return "문자 발송에 실패했습니다";
 }

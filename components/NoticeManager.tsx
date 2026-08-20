@@ -126,9 +126,15 @@ export function NoticeManager() {
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "문자 발송에 실패했습니다");
       const modeLabel = json.mock ? " (Mock 모드 — 실제 발송 아님, 콘솔 로그 확인)" : "";
+      const errors = (json.results as { to: string; success: boolean; error?: string }[])
+        .filter((r) => !r.success)
+        .map((r) => `${r.to}: ${r.error || "알 수 없는 오류"}`)
+        .join(" / ");
       setSendResult((prev) => ({
         ...prev,
-        [id]: `${json.sent}/${json.total}명에게 발송 완료${modeLabel}`,
+        [id]: `${json.sent}/${json.total}명에게 발송 완료${modeLabel}${
+          errors ? ` — 실패: ${errors}` : ""
+        }`,
       }));
     } catch (e) {
       setSendResult((prev) => ({
