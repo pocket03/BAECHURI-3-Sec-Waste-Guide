@@ -78,6 +78,7 @@ export function NoticeManager({ userId }: { userId: string }) {
     setError(null);
     try {
       const { en, zh, vi } = await translate(bodyKo);
+      let newId: string | null = null;
 
       if (editingId) {
         const { error } = await supabase
@@ -93,19 +94,29 @@ export function NoticeManager({ userId }: { userId: string }) {
           .eq("id", editingId);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from("notices").insert({
-          landlord_id: userId,
-          title,
-          body_ko: bodyKo,
-          body_en: en,
-          body_zh: zh,
-          body_vi: vi,
-        });
+        const { data, error } = await supabase
+          .from("notices")
+          .insert({
+            landlord_id: userId,
+            title,
+            body_ko: bodyKo,
+            body_en: en,
+            body_zh: zh,
+            body_vi: vi,
+          })
+          .select("id")
+          .single();
         if (error) throw error;
+        newId = data.id;
       }
 
       resetForm();
       await loadNotices();
+
+      // 새로 작성한 공지는 저장과 동시에 바로 문자 발송
+      if (newId) {
+        await handleSendSms(newId);
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "저장에 실패했습니다");
     } finally {
@@ -151,9 +162,15 @@ export function NoticeManager({ userId }: { userId: string }) {
   return (
     <div className="flex flex-col gap-6">
       <section className="rounded-2xl border border-neutral-200 bg-white p-4">
-        <h2 className="font-bold mb-3">
-          {editingId ? "공지사항 수정" : "새 공지사항 작성"}
+        <h2 className="font-bold mb-1">
+          {editingId ? "공지사항 수정" : "새 공지사항 작성 · 문자 발송"}
         </h2>
+        {!editingId && (
+          <p className="text-xs text-neutral-500 mb-3">
+            저장하면 3개 언어로 번역되어 등록된 세입자 전체에게 바로 문자가
+            발송됩니다.
+          </p>
+        )}
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -174,7 +191,11 @@ export function NoticeManager({ userId }: { userId: string }) {
             disabled={saving || !title.trim() || !bodyKo.trim()}
             className="px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-semibold hover:bg-green-700 disabled:opacity-50 transition-colors"
           >
-            {saving ? "저장 중..." : editingId ? "수정 저장" : "번역 후 저장"}
+            {saving
+              ? "처리 중..."
+              : editingId
+              ? "수정 저장"
+              : "번역 후 저장 + 문자 발송"}
           </button>
           {editingId && (
             <button
