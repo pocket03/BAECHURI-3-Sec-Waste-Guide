@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Tenant } from "@/lib/tenants";
 import { LANGS, LANG_LABEL, LANG_FLAG, Lang } from "@/lib/types";
 
-export function TenantManager() {
+export function TenantManager({ userId }: { userId: string }) {
   const supabase = createClient();
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [loadingList, setLoadingList] = useState(true);
@@ -20,6 +20,7 @@ export function TenantManager() {
     const { data, error } = await supabase
       .from("tenants")
       .select("*")
+      .eq("landlord_id", userId)
       .order("created_at", { ascending: false });
     if (!error && data) setTenants(data as Tenant[]);
     setLoadingList(false);
@@ -35,6 +36,7 @@ export function TenantManager() {
     if (!phone.trim()) return;
     setSaving(true);
     await supabase.from("tenants").insert({
+      landlord_id: userId,
       phone: phone.trim(),
       lang,
       memo: memo.trim() || null,

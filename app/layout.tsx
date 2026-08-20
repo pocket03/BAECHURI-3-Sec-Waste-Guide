@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/language-context";
+import { BuildingProvider } from "@/lib/building-context";
 
 export const metadata: Metadata = {
   title: "배추리 매니저 (BAECHURI Manager)",
@@ -16,7 +17,9 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="antialiased bg-neutral-50 text-neutral-900 min-h-screen">
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          <BuildingProvider>{children}</BuildingProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

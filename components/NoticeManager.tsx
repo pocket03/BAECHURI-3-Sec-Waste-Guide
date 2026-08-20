@@ -23,7 +23,7 @@ async function translate(text: string): Promise<Translations> {
   return json;
 }
 
-export function NoticeManager() {
+export function NoticeManager({ userId }: { userId: string }) {
   const supabase = createClient();
   const [notices, setNotices] = useState<Notice[]>([]);
   const [loadingList, setLoadingList] = useState(true);
@@ -47,6 +47,7 @@ export function NoticeManager() {
     const { data, error } = await supabase
       .from("notices")
       .select("*")
+      .eq("landlord_id", userId)
       .order("updated_at", { ascending: false });
     if (!error && data) setNotices(data as Notice[]);
     setLoadingList(false);
@@ -93,6 +94,7 @@ export function NoticeManager() {
         if (error) throw error;
       } else {
         const { error } = await supabase.from("notices").insert({
+          landlord_id: userId,
           title,
           body_ko: bodyKo,
           body_en: en,

@@ -1,5 +1,6 @@
 export interface Notice {
   id: string;
+  landlord_id: string;
   title: string;
   body_ko: string;
   body_en: string | null;

@@ -27,10 +27,14 @@ export async function POST(
   if (noticeError || !notice) {
     return NextResponse.json({ error: "공지사항을 찾을 수 없습니다" }, { status: 404 });
   }
+  if ((notice as Notice).landlord_id !== user.id) {
+    return NextResponse.json({ error: "본인 소유의 공지사항이 아닙니다" }, { status: 403 });
+  }
 
   const { data: tenants, error: tenantsError } = await supabase
     .from("tenants")
-    .select("*");
+    .select("*")
+    .eq("landlord_id", user.id);
   if (tenantsError) {
     return NextResponse.json({ error: "세입자 목록을 불러오지 못했습니다" }, { status: 500 });
   }
