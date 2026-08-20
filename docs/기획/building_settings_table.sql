@@ -2,6 +2,10 @@
 create table if not exists building_settings (
   landlord_id uuid primary key references auth.users(id),
   recycling_days int[] not null default '{2,5}', -- 0=일 1=월 2=화 3=수 4=목 5=금 6=토
+  banner_ko text,
+  banner_en text,
+  banner_zh text,
+  banner_vi text,
   updated_at timestamptz not null default now()
 );
 
