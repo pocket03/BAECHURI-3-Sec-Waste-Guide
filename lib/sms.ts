@@ -7,10 +7,18 @@ export interface SmsResult {
 
 // SOLAPI 발신번호 사전등록이 끝나기 전까지는 실제 발송 대신 로그만 남기는 Mock 모드로 동작합니다.
 // 환경변수 3개(SOLAPI_API_KEY, SOLAPI_API_SECRET, SOLAPI_SENDER_NUMBER)가 모두 채워지면 자동으로 실제 발송으로 전환됩니다.
+// 전화번호에 섞여 들어올 수 있는 공백·탭·줄바꿈 등을 제거하고 숫자와 하이픈만 남깁니다.
+// (예: Vercel 환경변수에 값을 붙여넣을 때 탭 문자가 같이 복사되는 실수를 방어)
+function sanitizePhone(raw: string): string {
+  return raw.replace(/[^0-9-]/g, "");
+}
+
 export async function sendSms(to: string, text: string): Promise<SmsResult> {
-  const apiKey = process.env.SOLAPI_API_KEY;
-  const apiSecret = process.env.SOLAPI_API_SECRET;
-  const senderNumber = process.env.SOLAPI_SENDER_NUMBER;
+  const apiKey = process.env.SOLAPI_API_KEY?.trim();
+  const apiSecret = process.env.SOLAPI_API_SECRET?.trim();
+  const senderNumber = process.env.SOLAPI_SENDER_NUMBER
+    ? sanitizePhone(process.env.SOLAPI_SENDER_NUMBER)
+    : undefined;
 
   if (!apiKey || !apiSecret || !senderNumber) {
     console.log(`[MOCK SMS] to ${to}: ${text}`);
@@ -20,7 +28,11 @@ export async function sendSms(to: string, text: string): Promise<SmsResult> {
   try {
     const { SolapiMessageService } = await import("solapi");
     const messageService = new SolapiMessageService(apiKey, apiSecret);
-    await messageService.send({ to, from: senderNumber, text });
+    await messageService.send({
+      to: sanitizePhone(to),
+      from: senderNumber,
+      text,
+    });
     return { to, success: true, mock: false };
   } catch (e) {
     const error = extractSolapiError(e);
