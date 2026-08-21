@@ -14,6 +14,7 @@ import { BuildingSettingsManager } from "@/components/BuildingSettingsManager";
 import { TenantManager } from "@/components/TenantManager";
 import { FaqManager } from "@/components/FaqManager";
 import { NoticeManager } from "@/components/NoticeManager";
+import { InquiryManager } from "@/components/InquiryManager";
 import { LogoutButton } from "@/components/LogoutButton";
 
 const GROUP_ORDER: TemplateGroup[] = ["trash", "moveout", "notice"];
@@ -27,6 +28,7 @@ const TABS = [
   { key: "send", icon: "📤", label: "발송" },
   { key: "notices", icon: "📋", label: "공지사항" },
   { key: "faq", icon: "💬", label: "FAQ" },
+  { key: "inquiries", icon: "📮", label: "문의" },
   { key: "tenants", icon: "👥", label: "세입자" },
   { key: "settings", icon: "⚙️", label: "건물 설정" },
 ] as const;
@@ -169,6 +171,7 @@ export function LandlordDashboard({
 
         {tab === "notices" && <NoticeManager userId={userId} />}
         {tab === "faq" && <FaqManager userId={userId} />}
+        {tab === "inquiries" && <InquiryManager userId={userId} />}
         {tab === "tenants" && <TenantManager userId={userId} />}
 
         {tab === "settings" && (
