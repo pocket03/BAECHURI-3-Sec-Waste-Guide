@@ -10,6 +10,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "text is required" }, { status: 400 });
   }
 
+  // 로그인 없이도 호출되는 공개 엔드포인트라, 과도하게 긴 텍스트로 번역 API 비용이
+  // 새는 것을 막기 위해 길이를 제한합니다.
+  if (text.length > 2000) {
+    return NextResponse.json({ error: "text is too long" }, { status: 400 });
+  }
+
   if (!process.env.GOOGLE_TRANSLATE_KEY) {
     return NextResponse.json(
       { error: "translation is not configured" },
