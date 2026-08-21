@@ -50,20 +50,22 @@ export function SignalLight({ lang }: { lang: Lang }) {
 
   if (green === null) {
     return (
-      <div className="rounded-2xl border border-neutral-200 bg-white p-4 animate-pulse h-24" />
+      <div className="rounded-2xl border border-neutral-200 bg-white p-5 animate-pulse h-28 shadow-sm" />
     );
   }
 
   // 집주인이 공지 배너를 설정해두면, 이 칸이 신호등 대신 공지 배너로 표시됩니다.
   if (banner) {
     return (
-      <div className="rounded-2xl p-4 flex items-start gap-3 border bg-amber-50 border-amber-300">
-        <div className="text-2xl leading-none">📢</div>
+      <div className="rounded-2xl p-5 flex items-start gap-3 border bg-amber-50 border-amber-300 shadow-sm">
+        <div className="text-3xl leading-none">📢</div>
         <div className="flex-1">
-          <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">
+          <p className="text-xs font-bold uppercase tracking-wide text-amber-700">
             공지
           </p>
-          <p className="text-sm text-amber-900 whitespace-pre-line mt-1">{banner}</p>
+          <p className="text-sm text-amber-900 whitespace-pre-line mt-1 leading-relaxed">
+            {banner}
+          </p>
         </div>
       </div>
     );
@@ -71,16 +73,16 @@ export function SignalLight({ lang }: { lang: Lang }) {
 
   return (
     <div
-      className={`rounded-2xl p-4 flex items-center gap-4 border ${
+      className={`rounded-2xl p-5 flex items-center gap-4 border shadow-sm ${
         green ? "bg-green-50 border-green-300" : "bg-red-50 border-red-300"
       }`}
     >
-      <div className="text-4xl leading-none">{green ? "🟢" : "🔴"}</div>
+      <div className="text-5xl leading-none">{green ? "🟢" : "🔴"}</div>
       <div className="flex-1">
-        <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+        <p className="text-xs font-bold uppercase tracking-wide text-neutral-500">
           {t(lang, "todaySignalTitle")}
         </p>
-        <p className="font-bold text-lg">
+        <p className="font-extrabold text-lg mt-0.5">
           {green ? t(lang, "todayGreen") : t(lang, "todayRed")}
         </p>
         <p className="text-sm text-neutral-600 mt-1">{t(lang, "generalWasteNote")}</p>

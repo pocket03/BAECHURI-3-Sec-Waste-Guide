@@ -10,7 +10,7 @@ import { ITEMS } from "@/lib/data/items";
 import { PLACES } from "@/lib/data/places";
 import { TEMPLATES, LEGAL_NOTICE_TEXT } from "@/lib/data/templates";
 import { CATEGORIES } from "@/lib/data/categories";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { TenantHeader } from "@/components/TenantHeader";
 import { createClient } from "@/lib/supabase/client";
 import { Notice } from "@/lib/notices";
 
@@ -29,12 +29,7 @@ function PageShell({ children }: { children: React.ReactNode }) {
   if (!ready) return null;
   return (
     <main className="mx-auto max-w-2xl px-4 py-6 pb-16">
-      <header className="mb-5">
-        <p className="text-sm font-semibold text-green-700">{t(lang, "brand")}</p>
-        <div className="mt-3">
-          <LanguageSwitcher />
-        </div>
-      </header>
+      <TenantHeader lang={lang} />
       {children}
       <div className="mt-8">
         <Link
@@ -66,7 +61,7 @@ export function ResultContent() {
     const category = CATEGORIES[item.category];
     return (
       <PageShell>
-        <div className="rounded-3xl border border-neutral-200 bg-white p-6 text-center">
+        <div className="rounded-3xl border border-neutral-200 bg-white shadow-sm p-6 text-center">
           <div className="text-6xl mb-3">{item.icon}</div>
           <h1 className="text-xl font-extrabold mb-2">{item.name[lang]}</h1>
           <span
@@ -116,7 +111,7 @@ export function ResultContent() {
     if (!place) return <PageShell><NotFound lang={lang} /></PageShell>;
     return (
       <PageShell>
-        <div className="rounded-3xl border border-neutral-200 bg-white p-6">
+        <div className="rounded-3xl border border-neutral-200 bg-white shadow-sm p-6">
           <div className="text-5xl mb-3 text-center">📍</div>
           <h1 className="text-xl font-extrabold text-center mb-2">{place.name[lang]}</h1>
           <p className="text-sm text-neutral-600 text-center mb-5">
@@ -145,7 +140,7 @@ export function ResultContent() {
     if (!template) return <PageShell><NotFound lang={lang} /></PageShell>;
     return (
       <PageShell>
-        <div className="rounded-3xl border border-neutral-200 bg-white p-6">
+        <div className="rounded-3xl border border-neutral-200 bg-white shadow-sm p-6">
           <div className="text-4xl mb-3 text-center">📢</div>
           <h1 className="text-xl font-extrabold text-center mb-4">{template.title[lang]}</h1>
           <div className="rounded-2xl bg-neutral-50 p-4 text-sm leading-relaxed whitespace-pre-line">
@@ -188,7 +183,7 @@ function CustomNoticeResult({ id, lang }: { id: string; lang: Lang }) {
   if (notice === undefined) {
     return (
       <PageShell>
-        <div className="rounded-3xl border border-neutral-200 bg-white p-10 text-center text-neutral-400 animate-pulse">
+        <div className="rounded-3xl border border-neutral-200 bg-white shadow-sm p-10 text-center text-neutral-400 animate-pulse">
           ...
         </div>
       </PageShell>
@@ -205,7 +200,7 @@ function CustomNoticeResult({ id, lang }: { id: string; lang: Lang }) {
 
   return (
     <PageShell>
-      <div className="rounded-3xl border border-neutral-200 bg-white p-6">
+      <div className="rounded-3xl border border-neutral-200 bg-white shadow-sm p-6">
         <div className="text-4xl mb-3 text-center">📢</div>
         <h1 className="text-xl font-extrabold text-center mb-4">{notice.title}</h1>
         <div className="rounded-2xl bg-neutral-50 p-4 text-sm leading-relaxed whitespace-pre-line">
@@ -218,7 +213,7 @@ function CustomNoticeResult({ id, lang }: { id: string; lang: Lang }) {
 
 function NotFound({ lang }: { lang: ReturnType<typeof useLanguage>["lang"] }) {
   return (
-    <div className="rounded-3xl border border-neutral-200 bg-white p-10 text-center text-neutral-500">
+    <div className="rounded-3xl border border-neutral-200 bg-white shadow-sm p-10 text-center text-neutral-500">
       {t(lang, "notFoundTitle")}
     </div>
   );

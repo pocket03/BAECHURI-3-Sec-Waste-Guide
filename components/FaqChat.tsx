@@ -66,7 +66,9 @@ export function FaqChat({ lang }: { lang: Lang }) {
 
   return (
     <div>
-      <h2 className="font-bold text-lg mb-3">{t(lang, "faqTitle")}</h2>
+      <h2 className="font-bold text-base mb-3 flex items-center gap-1.5">
+        <span>💬</span> {t(lang, "faqTitle")}
+      </h2>
       <div className="flex flex-col gap-2">
         {(faqs ?? []).map((faq) => {
           const open = openId === faq.id;
@@ -74,16 +76,21 @@ export function FaqChat({ lang }: { lang: Lang }) {
             <div key={faq.id}>
               <button
                 onClick={() => setOpenId(open ? null : faq.id)}
-                className={`w-full text-left rounded-xl border px-4 py-2.5 text-sm font-medium transition-colors ${
+                className={`w-full flex items-center justify-between gap-2 text-left rounded-2xl border px-4 py-3 text-sm font-medium transition-colors ${
                   open
-                    ? "bg-green-600 text-white border-green-600"
+                    ? "bg-green-600 text-white border-green-600 shadow-sm"
                     : "bg-white border-neutral-200 text-neutral-800 hover:border-green-400"
                 }`}
               >
-                {faq.question}
+                <span>{faq.question}</span>
+                <span
+                  className={`shrink-0 text-xs transition-transform ${open ? "rotate-180" : ""}`}
+                >
+                  ▾
+                </span>
               </button>
               {open && (
-                <div className="mt-1 ml-3 rounded-xl rounded-tl-none bg-neutral-100 px-4 py-2.5 text-sm text-neutral-700">
+                <div className="mt-1 ml-3 rounded-2xl rounded-tl-none bg-neutral-100 px-4 py-3 text-sm text-neutral-700 leading-relaxed">
                   {faq.answer}
                 </div>
               )}
