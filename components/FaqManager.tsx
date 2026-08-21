@@ -112,9 +112,9 @@ export function FaqManager({ userId }: { userId: string }) {
   };
 
   return (
-    <section className="rounded-2xl border border-neutral-200 bg-white p-4">
-      <h2 className="font-bold mb-1">
-        {editingId ? "FAQ 수정" : "새 FAQ 작성"}
+    <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+      <h2 className="font-bold mb-1 flex items-center gap-1.5">
+        <span>💬</span> {editingId ? "FAQ 수정" : "새 FAQ 작성"}
       </h2>
       <p className="text-xs text-neutral-500 mb-3">
         여기서 등록한 FAQ는 우리 건물 QR로 들어온 세입자에게만 보입니다.
@@ -162,7 +162,7 @@ export function FaqManager({ userId }: { userId: string }) {
         {faqs.map((faq) => (
           <div
             key={faq.id}
-            className="rounded-lg bg-neutral-50 px-3 py-2 text-sm flex items-start justify-between gap-3"
+            className="rounded-xl bg-neutral-50 px-3 py-2.5 text-sm flex items-start justify-between gap-3"
           >
             <div>
               <p className="font-semibold">{faq.question_ko}</p>

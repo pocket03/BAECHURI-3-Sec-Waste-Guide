@@ -54,8 +54,10 @@ export function TenantManager({ userId }: { userId: string }) {
   };
 
   return (
-    <section className="rounded-2xl border border-neutral-200 bg-white p-4">
-      <h2 className="font-bold mb-1">세입자 전화번호 관리</h2>
+    <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+      <h2 className="font-bold mb-1 flex items-center gap-1.5">
+        <span>👥</span> 세입자 전화번호 관리
+      </h2>
       <p className="text-xs text-neutral-500 mb-3">
         공지사항을 문자로 보낼 세입자 목록입니다. 데모용으로 직접 입력해서
         관리합니다.
@@ -102,7 +104,7 @@ export function TenantManager({ userId }: { userId: string }) {
         {tenants.map((tenant) => (
           <div
             key={tenant.id}
-            className="flex items-center justify-between rounded-lg bg-neutral-50 px-3 py-2 text-sm"
+            className="flex items-center justify-between rounded-xl bg-neutral-50 px-3 py-2.5 text-sm"
           >
             <span>
               {LANG_FLAG[tenant.lang]} {tenant.phone}

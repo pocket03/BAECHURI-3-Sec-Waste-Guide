@@ -46,8 +46,10 @@ export function CustomNoticeTranslator() {
     : "";
 
   return (
-    <section className="mb-6 rounded-2xl border border-neutral-200 bg-white p-4">
-      <h2 className="font-bold mb-1">✏️ 직접 작성 + 자동번역</h2>
+    <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+      <h2 className="font-bold mb-1 flex items-center gap-1.5">
+        <span>✏️</span> 직접 작성 + 자동번역
+      </h2>
       <p className="text-xs text-neutral-500 mb-3">
         정해진 템플릿에 없는 공지는 직접 한국어로 작성하면 3개 언어로 자동
         번역됩니다. 기계 번역이니 중요한 내용은 발송 전에 한 번 더

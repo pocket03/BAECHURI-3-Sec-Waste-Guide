@@ -43,7 +43,7 @@ export function QrCodeImage({
         alt="QR code"
         width={size}
         height={size}
-        className="rounded-lg border border-neutral-200"
+        className="rounded-lg border border-neutral-200 shadow-sm"
       />
       <a
         href={dataUrl}

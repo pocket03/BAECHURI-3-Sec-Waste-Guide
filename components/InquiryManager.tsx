@@ -64,8 +64,8 @@ export function InquiryManager({ userId }: { userId: string }) {
 
   return (
     <section>
-      <h2 className="font-bold mb-3">
-        세입자 문의{" "}
+      <h2 className="font-bold mb-3 flex items-center gap-1.5">
+        <span>📮</span> 세입자 문의{" "}
         {!loadingList &&
           `(${inquiries.length}${unreadCount > 0 ? ` · 미답변 ${unreadCount}` : ""})`}
       </h2>
@@ -77,7 +77,7 @@ export function InquiryManager({ userId }: { userId: string }) {
         {inquiries.map((inquiry) => (
           <div
             key={inquiry.id}
-            className="rounded-2xl border border-neutral-200 bg-white p-4"
+            className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm"
           >
             <div className="flex items-start justify-between gap-3 mb-2">
               <div>

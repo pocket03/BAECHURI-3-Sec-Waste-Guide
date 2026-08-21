@@ -70,12 +70,15 @@ export function LandlordDashboard({
     <div className="min-h-screen bg-neutral-50">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 py-8">
         <header className="mb-6 flex items-start justify-between gap-3">
-          <div>
-            <p className="text-sm font-semibold text-green-700">
-              {t("ko", "brand")}
-            </p>
-            <h1 className="text-2xl font-extrabold mt-1">{t("ko", "landlordTitle")}</h1>
-            <p className="text-neutral-500 mt-1 text-xs">{userEmail}로 로그인됨</p>
+          <div className="flex items-start gap-2">
+            <span className="text-2xl shrink-0 mt-0.5">🥬</span>
+            <div>
+              <p className="text-sm font-semibold text-green-700">
+                {t("ko", "brand")}
+              </p>
+              <h1 className="text-2xl font-extrabold mt-1">{t("ko", "landlordTitle")}</h1>
+              <p className="text-neutral-500 mt-1 text-xs">{userEmail}로 로그인됨</p>
+            </div>
           </div>
           <LogoutButton />
         </header>
@@ -100,8 +103,10 @@ export function LandlordDashboard({
         {tab === "send" && (
           <div className="grid lg:grid-cols-2 gap-6 items-start">
             <div className="flex flex-col gap-6">
-              <section className="rounded-2xl border border-neutral-200 bg-white p-5">
-                <h2 className="font-bold mb-1">알림톡 템플릿 선택</h2>
+              <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+                <h2 className="font-bold mb-1 flex items-center gap-1.5">
+                  <span>📤</span> 알림톡 템플릿 선택
+                </h2>
                 <p className="text-xs text-neutral-500 mb-4">
                   {t("ko", "landlordSubtitle")}
                 </p>
@@ -133,9 +138,11 @@ export function LandlordDashboard({
             </div>
 
             <div className="flex flex-col gap-6">
-              <section className="rounded-2xl border border-neutral-200 bg-white p-5">
+              <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="font-bold">{t("ko", "previewTitle")}</h2>
+                  <h2 className="font-bold flex items-center gap-1.5">
+                    <span>👁️</span> {t("ko", "previewTitle")}
+                  </h2>
                   <CopyButton
                     text={combinedMessage}
                     label={t("ko", "copyAllButton")}
@@ -154,8 +161,10 @@ export function LandlordDashboard({
                 )}
               </section>
 
-              <section className="rounded-2xl border border-neutral-200 bg-white p-5">
-                <h2 className="font-bold mb-1">{t("ko", "siteQrSectionTitle")}</h2>
+              <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+                <h2 className="font-bold mb-1 flex items-center gap-1.5">
+                  <span>📍</span> {t("ko", "siteQrSectionTitle")}
+                </h2>
                 <p className="text-xs text-neutral-500 mb-3">
                   {t("ko", "siteQrSectionDesc")}
                 </p>

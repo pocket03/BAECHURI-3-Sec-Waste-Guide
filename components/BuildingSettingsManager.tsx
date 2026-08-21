@@ -77,8 +77,10 @@ export function BuildingSettingsManager({ userId }: { userId: string }) {
   };
 
   return (
-    <section className="rounded-2xl border border-neutral-200 bg-white p-4">
-      <h2 className="font-bold mb-1">오늘의 배출 신호등 · 공지 배너 설정</h2>
+    <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+      <h2 className="font-bold mb-1 flex items-center gap-1.5">
+        <span>🚦</span> 오늘의 배출 신호등 · 공지 배너 설정
+      </h2>
       <p className="text-xs text-neutral-500 mb-3">
         우리 건물에서 재활용을 배출할 수 있는 요일과, 세입자 화면 상단에
         띄울 공지·주의사항 배너를 설정하세요.

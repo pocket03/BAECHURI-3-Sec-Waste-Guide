@@ -161,9 +161,9 @@ export function NoticeManager({ userId }: { userId: string }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <section className="rounded-2xl border border-neutral-200 bg-white p-4">
-        <h2 className="font-bold mb-1">
-          {editingId ? "공지사항 수정" : "새 공지사항 작성 · 문자 발송"}
+      <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+        <h2 className="font-bold mb-1 flex items-center gap-1.5">
+          <span>📋</span> {editingId ? "공지사항 수정" : "새 공지사항 작성 · 문자 발송"}
         </h2>
         {!editingId && (
           <p className="text-xs text-neutral-500 mb-3">
@@ -226,7 +226,7 @@ export function NoticeManager({ userId }: { userId: string }) {
             return (
               <div
                 key={notice.id}
-                className="rounded-2xl border border-neutral-200 bg-white p-4"
+                className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm"
               >
                 <div className="flex items-start justify-between gap-3 mb-2">
                   <h3 className="font-bold">{notice.title}</h3>

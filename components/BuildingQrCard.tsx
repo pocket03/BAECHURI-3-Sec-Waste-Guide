@@ -15,8 +15,10 @@ export function BuildingQrCard({ userId }: { userId: string }) {
   const link = `${origin}/guide?b=${userId}`;
 
   return (
-    <section className="rounded-2xl border border-neutral-200 bg-white p-4">
-      <h2 className="font-bold mb-1">우리 건물 QR · 링크</h2>
+    <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+      <h2 className="font-bold mb-1 flex items-center gap-1.5">
+        <span>🔗</span> 우리 건물 QR · 링크
+      </h2>
       <p className="text-xs text-neutral-500 mb-3">
         이 QR·링크로 들어온 세입자에게는 여기서 등록한 FAQ와 공지사항이
         표시됩니다.
