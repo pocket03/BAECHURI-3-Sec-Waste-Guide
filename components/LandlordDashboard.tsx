@@ -111,16 +111,19 @@ export function LandlordDashboard({
             </div>
           </div>
           <div className="flex items-center gap-3 shrink-0">
-            <div className="flex items-center gap-2">
+            <button
+              type="button"
+              role="switch"
+              aria-checked={simple}
+              onClick={toggleSimple}
+              className="flex items-center gap-2 rounded-full pl-3 pr-1.5 py-1.5 border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)]"
+              style={{ boxShadow: "var(--w-shadow-normal)" }}
+            >
               <span className="text-sm font-semibold text-[color:var(--w-label-normal)]">
                 간편 UI 모드
               </span>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={simple}
-                onClick={toggleSimple}
-                className="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-200"
+              <span
+                className="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full border border-[color:var(--w-line)] transition-colors duration-200"
                 style={{
                   backgroundColor: simple ? "var(--w-primary)" : "var(--w-fill)",
                 }}
@@ -128,11 +131,12 @@ export function LandlordDashboard({
                 <span
                   className="inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-200"
                   style={{
-                    transform: simple ? "translateX(22px)" : "translateX(2px)",
+                    boxShadow: "var(--w-shadow-normal)",
+                    transform: simple ? "translateX(21px)" : "translateX(1px)",
                   }}
                 />
-              </button>
-            </div>
+              </span>
+            </button>
             <LogoutButton />
           </div>
         </header>
