@@ -36,7 +36,7 @@ export function CopyButton({
       onClick={handleClick}
       className={
         className ||
-        "px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-semibold hover:bg-green-700 transition-colors"
+        "px-4 py-2 rounded-lg bg-[color:var(--w-primary)] text-white text-sm font-semibold hover:bg-[color:var(--w-primary-strong)] transition-colors"
       }
     >
       {copied ? copiedLabel : label}

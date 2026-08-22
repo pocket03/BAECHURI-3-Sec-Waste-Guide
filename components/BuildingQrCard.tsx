@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { QrCodeImage } from "@/components/QrCodeImage";
 import { CopyButton } from "@/components/CopyButton";
+import { LinkIcon } from "@/components/icons";
 
 export function BuildingQrCard({ userId }: { userId: string }) {
   const [origin, setOrigin] = useState("");
@@ -15,11 +16,17 @@ export function BuildingQrCard({ userId }: { userId: string }) {
   const link = `${origin}/guide?b=${userId}`;
 
   return (
-    <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
-      <h2 className="font-bold mb-1 flex items-center gap-1.5">
-        <span>🔗</span> 우리 건물 QR · 링크
+    <section
+      className="rounded-2xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-5"
+      style={{ boxShadow: "var(--w-shadow-normal)" }}
+    >
+      <h2 className="font-bold mb-1 flex items-center gap-1.5 text-[color:var(--w-label-normal)]">
+        <span style={{ color: "var(--w-primary)" }}>
+          <LinkIcon size={20} />
+        </span>{" "}
+        우리 건물 QR · 링크
       </h2>
-      <p className="text-xs text-neutral-500 mb-3">
+      <p className="text-xs text-[color:var(--w-label-alt)] mb-3">
         이 QR·링크로 들어온 세입자에게는 여기서 등록한 FAQ와 공지사항이
         표시됩니다.
       </p>
@@ -34,13 +41,13 @@ export function BuildingQrCard({ userId }: { userId: string }) {
             <input
               readOnly
               value={link}
-              className="flex-1 min-w-0 rounded-lg border border-neutral-300 px-3 py-2 text-xs text-neutral-600"
+              className="flex-1 min-w-0 rounded-xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] px-3 py-2 text-xs text-[color:var(--w-label-alt)]"
             />
             <CopyButton
               text={link}
               label="링크 복사"
               copiedLabel="복사됨"
-              className="px-3 py-2 rounded-lg border border-green-600 text-green-700 text-xs font-semibold hover:bg-green-50 transition-colors whitespace-nowrap"
+              className="px-3 py-2 rounded-xl border border-[color:var(--w-line)] text-[color:var(--w-label-neutral)] text-xs font-semibold hover:bg-[color:var(--w-fill)] transition-colors whitespace-nowrap"
             />
           </div>
         </div>

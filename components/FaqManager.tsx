@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Faq } from "@/lib/faq";
+import { BubblePlusIcon } from "@/components/icons";
 
 async function translate(text: string): Promise<{ en: string; zh: string; vi: string }> {
   const res = await fetch("/api/translate", {
@@ -112,11 +113,17 @@ export function FaqManager({ userId }: { userId: string }) {
   };
 
   return (
-    <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
-      <h2 className="font-bold mb-1 flex items-center gap-1.5">
-        <span>💬</span> {editingId ? "FAQ 수정" : "새 FAQ 작성"}
+    <section
+      className="rounded-2xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-5"
+      style={{ boxShadow: "var(--w-shadow-normal)" }}
+    >
+      <h2 className="font-bold mb-1 flex items-center gap-1.5 text-[color:var(--w-label-normal)]">
+        <span style={{ color: "var(--w-primary)" }}>
+          <BubblePlusIcon size={20} />
+        </span>{" "}
+        {editingId ? "FAQ 수정" : "새 FAQ 작성"}
       </h2>
-      <p className="text-xs text-neutral-500 mb-3">
+      <p className="text-xs text-[color:var(--w-label-alt)] mb-3">
         여기서 등록한 FAQ는 우리 건물 QR로 들어온 세입자에게만 보입니다.
         비워두면 기본 FAQ 4개가 대신 표시됩니다.
       </p>
@@ -124,37 +131,37 @@ export function FaqManager({ userId }: { userId: string }) {
         value={questionKo}
         onChange={(e) => setQuestionKo(e.target.value)}
         placeholder="질문 (예: 분리수거장 위치가 어디인가요?)"
-        className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm mb-2"
+        className="w-full rounded-xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] px-3 py-2 text-sm text-[color:var(--w-label-normal)] mb-2"
       />
       <textarea
         value={answerKo}
         onChange={(e) => setAnswerKo(e.target.value)}
         rows={2}
         placeholder="답변을 한국어로 입력하세요. 저장하면 3개 언어로 자동 번역됩니다."
-        className="w-full rounded-lg border border-neutral-300 p-3 text-sm mb-3 resize-none"
+        className="w-full rounded-xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-3 text-sm text-[color:var(--w-label-normal)] mb-3 resize-none"
       />
-      {error && <p className="text-sm text-red-600 mb-2">{error}</p>}
+      {error && <p className="text-sm text-[color:var(--w-status-negative)] mb-2">{error}</p>}
       <div className="flex gap-2 mb-4">
         <button
           onClick={handleSave}
           disabled={saving || !questionKo.trim() || !answerKo.trim()}
-          className="px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-semibold hover:bg-green-700 disabled:opacity-50 transition-colors"
+          className="px-4 py-2 rounded-xl bg-[color:var(--w-primary)] text-white text-sm font-semibold hover:bg-[color:var(--w-primary-strong)] disabled:opacity-50 transition-colors"
         >
           {saving ? "저장 중..." : editingId ? "수정 저장" : "번역 후 저장"}
         </button>
         {editingId && (
           <button
             onClick={resetForm}
-            className="px-4 py-2 rounded-lg border border-neutral-300 text-neutral-600 text-sm font-semibold hover:bg-neutral-50 transition-colors"
+            className="px-4 py-2 rounded-xl border border-[color:var(--w-line)] text-[color:var(--w-label-neutral)] text-sm font-semibold hover:bg-[color:var(--w-fill)] transition-colors"
           >
             취소
           </button>
         )}
       </div>
 
-      {loadingList && <p className="text-sm text-neutral-400">불러오는 중...</p>}
+      {loadingList && <p className="text-sm text-[color:var(--w-label-assistive)]">불러오는 중...</p>}
       {!loadingList && faqs.length === 0 && (
-        <p className="text-sm text-neutral-400">
+        <p className="text-sm text-[color:var(--w-label-assistive)]">
           등록된 FAQ가 없습니다 (기본 FAQ 4개가 대신 표시됩니다).
         </p>
       )}
@@ -162,22 +169,22 @@ export function FaqManager({ userId }: { userId: string }) {
         {faqs.map((faq) => (
           <div
             key={faq.id}
-            className="rounded-xl bg-neutral-50 px-3 py-2.5 text-sm flex items-start justify-between gap-3"
+            className="rounded-xl bg-[color:var(--w-fill)] px-3 py-2.5 text-sm flex items-start justify-between gap-3"
           >
             <div>
-              <p className="font-semibold">{faq.question_ko}</p>
-              <p className="text-neutral-500">{faq.answer_ko}</p>
+              <p className="font-semibold text-[color:var(--w-label-normal)]">{faq.question_ko}</p>
+              <p className="text-[color:var(--w-label-alt)]">{faq.answer_ko}</p>
             </div>
             <div className="flex gap-2 shrink-0">
               <button
                 onClick={() => startEdit(faq)}
-                className="text-xs font-semibold text-green-700 underline underline-offset-2"
+                className="text-xs font-semibold text-[color:var(--w-primary)] underline underline-offset-2"
               >
                 수정
               </button>
               <button
                 onClick={() => handleDelete(faq.id)}
-                className="text-xs font-semibold text-red-600 underline underline-offset-2"
+                className="text-xs font-semibold text-[color:var(--w-status-negative)] underline underline-offset-2"
               >
                 삭제
               </button>

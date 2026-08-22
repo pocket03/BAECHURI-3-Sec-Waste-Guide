@@ -20,8 +20,8 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
             compact ? "px-2.5 py-1 text-xs" : "px-3 py-1.5 text-sm"
           } ${
             l === lang
-              ? "bg-green-600 text-white border-green-600"
-              : "bg-white text-neutral-700 border-neutral-300 hover:border-green-400"
+              ? "bg-[color:var(--w-primary)] text-white border-[color:var(--w-primary)]"
+              : "bg-[color:var(--w-bg-card)] text-[color:var(--w-label-neutral)] border-[color:var(--w-line)] hover:border-[color:var(--w-primary)]"
           }`}
         >
           <span className={compact ? "" : "mr-1"}>{LANG_FLAG[l]}</span>

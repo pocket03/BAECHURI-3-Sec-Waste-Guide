@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { BrandMark } from "@/components/BrandMark";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -35,18 +36,25 @@ export default function LoginPage() {
   return (
     <main className="mx-auto max-w-sm px-4 py-16 min-h-screen flex flex-col justify-center">
       <div className="mb-8 text-center">
-        <p className="text-sm font-semibold text-green-700">배추리 매니저</p>
-        <h1 className="text-xl font-extrabold mt-1">집주인 로그인</h1>
+        <div className="flex justify-center mb-3">
+          <BrandMark size={56} />
+        </div>
+        <p className="text-sm font-semibold text-[color:var(--w-primary)]">배추리 매니저</p>
+        <h1 className="text-2xl font-extrabold mt-1 text-[color:var(--w-label-strong)]">집주인 로그인</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-3 rounded-3xl bg-[color:var(--w-bg-card)] p-8"
+        style={{ boxShadow: "var(--w-shadow-normal)" }}
+      >
         <input
           type="email"
           required
           placeholder="이메일"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="rounded-lg border border-neutral-300 px-4 py-2.5 text-sm"
+          className="rounded-xl border border-[color:var(--w-line)] px-4 py-2.5 text-sm"
         />
         <input
           type="password"
@@ -54,13 +62,13 @@ export default function LoginPage() {
           placeholder="비밀번호"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="rounded-lg border border-neutral-300 px-4 py-2.5 text-sm"
+          className="rounded-xl border border-[color:var(--w-line)] px-4 py-2.5 text-sm"
         />
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-[color:var(--w-status-negative)]">{error}</p>}
         <button
           type="submit"
           disabled={loading}
-          className="mt-2 rounded-lg bg-green-600 text-white text-sm font-semibold py-2.5 hover:bg-green-700 disabled:opacity-50 transition-colors"
+          className="mt-2 rounded-xl bg-[color:var(--w-primary)] text-white text-sm font-semibold py-2.5 hover:bg-[color:var(--w-primary-strong)] disabled:opacity-50 transition-colors"
         >
           {loading ? "로그인 중..." : "로그인"}
         </button>

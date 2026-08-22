@@ -16,7 +16,7 @@ export function LogoutButton() {
   return (
     <button
       onClick={handleLogout}
-      className="text-sm font-semibold text-neutral-500 underline underline-offset-2"
+      className="text-sm font-semibold text-[color:var(--w-label-alt)] underline underline-offset-2"
     >
       로그아웃
     </button>

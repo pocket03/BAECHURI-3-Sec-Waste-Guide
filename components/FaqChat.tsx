@@ -7,6 +7,7 @@ import { Faq } from "@/lib/faq";
 import { useBuilding } from "@/lib/building-context";
 import { createClient } from "@/lib/supabase/client";
 import { t } from "@/lib/i18n";
+import { BubbleIcon, ChevronDownIcon } from "@/components/icons";
 
 interface DisplayFaq {
   id: string;
@@ -67,7 +68,10 @@ export function FaqChat({ lang }: { lang: Lang }) {
   return (
     <div>
       <h2 className="font-bold text-base mb-3 flex items-center gap-1.5">
-        <span>💬</span> {t(lang, "faqTitle")}
+        <span className="text-[color:var(--w-label-neutral)]">
+          <BubbleIcon size={18} />
+        </span>
+        {t(lang, "faqTitle")}
       </h2>
       <div className="flex flex-col gap-2">
         {(faqs ?? []).map((faq) => {
@@ -76,21 +80,24 @@ export function FaqChat({ lang }: { lang: Lang }) {
             <div key={faq.id}>
               <button
                 onClick={() => setOpenId(open ? null : faq.id)}
-                className={`w-full flex items-center justify-between gap-2 text-left rounded-2xl border px-4 py-3 text-sm font-medium transition-colors ${
+                className={`w-full flex items-center justify-between gap-2 text-left rounded-2xl border px-4 py-3 text-[15px] font-semibold transition-colors ${
                   open
-                    ? "bg-green-600 text-white border-green-600 shadow-sm"
-                    : "bg-white border-neutral-200 text-neutral-800 hover:border-green-400"
+                    ? "bg-[color:var(--w-primary)] text-white border-[color:var(--w-primary)]"
+                    : "bg-[color:var(--w-bg-card)] border-[color:var(--w-line)] text-[color:var(--w-label-normal)]"
                 }`}
+                style={{ boxShadow: open ? "var(--w-shadow-emphasize)" : "var(--w-shadow-normal)" }}
               >
                 <span>{faq.question}</span>
                 <span
-                  className={`shrink-0 text-xs transition-transform ${open ? "rotate-180" : ""}`}
+                  className={`shrink-0 transition-transform ${open ? "rotate-180" : ""} ${
+                    open ? "text-white" : "text-[color:var(--w-label-alt)]"
+                  }`}
                 >
-                  ▾
+                  <ChevronDownIcon size={16} />
                 </span>
               </button>
               {open && (
-                <div className="mt-1 ml-3 rounded-2xl rounded-tl-none bg-neutral-100 px-4 py-3 text-sm text-neutral-700 leading-relaxed">
+                <div className="mt-1 ml-3 rounded-2xl rounded-tl-none px-4 py-3 text-sm leading-relaxed bg-[color:var(--w-fill)] text-[color:var(--w-label-neutral)]">
                   {faq.answer}
                 </div>
               )}

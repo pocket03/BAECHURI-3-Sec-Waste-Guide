@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Notice } from "@/lib/notices";
 import { CopyButton } from "@/components/CopyButton";
 import { QrCodeImage } from "@/components/QrCodeImage";
+import { MegaphoneIcon } from "@/components/icons";
 
 interface Translations {
   en: string;
@@ -161,12 +162,18 @@ export function NoticeManager({ userId }: { userId: string }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
-        <h2 className="font-bold mb-1 flex items-center gap-1.5">
-          <span>📋</span> {editingId ? "공지사항 수정" : "새 공지사항 작성 · 문자 발송"}
+      <section
+        className="rounded-2xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-5"
+        style={{ boxShadow: "var(--w-shadow-normal)" }}
+      >
+        <h2 className="font-bold mb-1 flex items-center gap-1.5 text-[color:var(--w-label-normal)]">
+          <span style={{ color: "var(--w-primary)" }}>
+            <MegaphoneIcon size={20} />
+          </span>{" "}
+          {editingId ? "공지사항 수정" : "새 공지사항 작성 · 문자 발송"}
         </h2>
         {!editingId && (
-          <p className="text-xs text-neutral-500 mb-3">
+          <p className="text-xs text-[color:var(--w-label-alt)] mb-3">
             저장하면 3개 언어로 번역되어 등록된 세입자 전체에게 바로 문자가
             발송됩니다.
           </p>
@@ -175,21 +182,21 @@ export function NoticeManager({ userId }: { userId: string }) {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="공지 제목 (예: 엘리베이터 점검 안내)"
-          className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm mb-2"
+          className="w-full rounded-xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] px-3 py-2 text-sm text-[color:var(--w-label-normal)] mb-2"
         />
         <textarea
           value={bodyKo}
           onChange={(e) => setBodyKo(e.target.value)}
           rows={3}
           placeholder="공지 내용을 한국어로 입력하세요. 저장하면 3개 언어로 자동 번역됩니다."
-          className="w-full rounded-lg border border-neutral-300 p-3 text-sm mb-3 resize-none"
+          className="w-full rounded-xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-3 text-sm text-[color:var(--w-label-normal)] mb-3 resize-none"
         />
-        {error && <p className="text-sm text-red-600 mb-2">{error}</p>}
+        {error && <p className="text-sm text-[color:var(--w-status-negative)] mb-2">{error}</p>}
         <div className="flex gap-2">
           <button
             onClick={handleSave}
             disabled={saving || !title.trim() || !bodyKo.trim()}
-            className="px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-semibold hover:bg-green-700 disabled:opacity-50 transition-colors"
+            className="px-4 py-2 rounded-xl bg-[color:var(--w-primary)] text-white text-sm font-semibold hover:bg-[color:var(--w-primary-strong)] disabled:opacity-50 transition-colors"
           >
             {saving
               ? "처리 중..."
@@ -200,7 +207,7 @@ export function NoticeManager({ userId }: { userId: string }) {
           {editingId && (
             <button
               onClick={resetForm}
-              className="px-4 py-2 rounded-lg border border-neutral-300 text-neutral-600 text-sm font-semibold hover:bg-neutral-50 transition-colors"
+              className="px-4 py-2 rounded-xl border border-[color:var(--w-line)] text-[color:var(--w-label-neutral)] text-sm font-semibold hover:bg-[color:var(--w-fill)] transition-colors"
             >
               취소
             </button>
@@ -209,14 +216,14 @@ export function NoticeManager({ userId }: { userId: string }) {
       </section>
 
       <section>
-        <h2 className="font-bold mb-3">
+        <h2 className="font-bold mb-3 text-[color:var(--w-label-normal)]">
           작성된 공지사항 {loadingList ? "" : `(${notices.length})`}
         </h2>
         {loadingList && (
-          <p className="text-sm text-neutral-400">불러오는 중...</p>
+          <p className="text-sm text-[color:var(--w-label-assistive)]">불러오는 중...</p>
         )}
         {!loadingList && notices.length === 0 && (
-          <p className="text-sm text-neutral-400">
+          <p className="text-sm text-[color:var(--w-label-assistive)]">
             아직 작성된 공지사항이 없습니다.
           </p>
         )}
@@ -226,38 +233,39 @@ export function NoticeManager({ userId }: { userId: string }) {
             return (
               <div
                 key={notice.id}
-                className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm"
+                className="rounded-2xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-4"
+                style={{ boxShadow: "var(--w-shadow-normal)" }}
               >
                 <div className="flex items-start justify-between gap-3 mb-2">
-                  <h3 className="font-bold">{notice.title}</h3>
+                  <h3 className="font-bold text-[color:var(--w-label-normal)]">{notice.title}</h3>
                   <div className="flex gap-2 shrink-0">
                     <button
                       onClick={() => startEdit(notice)}
-                      className="text-xs font-semibold text-green-700 underline underline-offset-2"
+                      className="text-xs font-semibold text-[color:var(--w-primary)] underline underline-offset-2"
                     >
                       수정
                     </button>
                     <button
                       onClick={() => handleDelete(notice.id)}
-                      className="text-xs font-semibold text-red-600 underline underline-offset-2"
+                      className="text-xs font-semibold text-[color:var(--w-status-negative)] underline underline-offset-2"
                     >
                       삭제
                     </button>
                   </div>
                 </div>
-                <p className="text-sm text-neutral-700 whitespace-pre-line mb-3">
+                <p className="text-sm text-[color:var(--w-label-neutral)] whitespace-pre-line mb-3">
                   {notice.body_ko}
                 </p>
                 <div className="mb-3">
                   <button
                     onClick={() => handleSendSms(notice.id)}
                     disabled={sendingId === notice.id}
-                    className="px-3 py-1.5 rounded-lg border border-neutral-300 text-neutral-700 text-xs font-semibold hover:bg-neutral-50 disabled:opacity-50 transition-colors"
+                    className="px-3 py-1.5 rounded-xl border border-[color:var(--w-line)] text-[color:var(--w-label-neutral)] text-xs font-semibold hover:bg-[color:var(--w-fill)] disabled:opacity-50 transition-colors"
                   >
                     {sendingId === notice.id ? "발송 중..." : "📱 문자로 발송"}
                   </button>
                   {sendResult[notice.id] && (
-                    <p className="text-xs text-neutral-500 mt-1">
+                    <p className="text-xs text-[color:var(--w-label-alt)] mt-1">
                       {sendResult[notice.id]}
                     </p>
                   )}
@@ -274,13 +282,13 @@ export function NoticeManager({ userId }: { userId: string }) {
                       <input
                         readOnly
                         value={link}
-                        className="flex-1 min-w-0 rounded-lg border border-neutral-300 px-3 py-2 text-xs text-neutral-600"
+                        className="flex-1 min-w-0 rounded-xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] px-3 py-2 text-xs text-[color:var(--w-label-alt)]"
                       />
                       <CopyButton
                         text={link}
                         label="링크 복사"
                         copiedLabel="복사됨"
-                        className="px-3 py-2 rounded-lg border border-green-600 text-green-700 text-xs font-semibold hover:bg-green-50 transition-colors whitespace-nowrap"
+                        className="px-3 py-2 rounded-xl border border-[color:var(--w-line)] text-[color:var(--w-label-neutral)] text-xs font-semibold hover:bg-[color:var(--w-fill)] transition-colors whitespace-nowrap"
                       />
                     </div>
                   </div>

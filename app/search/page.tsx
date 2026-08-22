@@ -7,6 +7,7 @@ import { TenantHeader } from "@/components/TenantHeader";
 import { SignalLight } from "@/components/SignalLight";
 import { FaqChat } from "@/components/FaqChat";
 import { ItemGrid } from "@/components/ItemGrid";
+import { MailIcon, ChevronRightIcon } from "@/components/icons";
 
 export default function SearchPage() {
   const { lang, ready } = useLanguage();
@@ -24,14 +25,22 @@ export default function SearchPage() {
 
         <Link
           href="/inquiry"
-          className="flex items-center justify-between gap-2 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm hover:border-green-400 hover:shadow-md transition-all"
+          className="flex items-center justify-between gap-2 rounded-2xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-4 hover:shadow-md transition-all"
+          style={{ boxShadow: "var(--w-shadow-normal)" }}
         >
-          <span className="font-bold text-sm">{t(lang, "inquiryButtonLabel")}</span>
-          <span className="text-neutral-400">→</span>
+          <span className="flex items-center gap-2 font-bold text-sm">
+            <span className="text-[color:var(--w-primary)]">
+              <MailIcon size={18} />
+            </span>
+            {t(lang, "inquiryButtonLabel").replace(/^📮\s*/u, "")}
+          </span>
+          <span className="text-[color:var(--w-label-alt)]">
+            <ChevronRightIcon size={18} />
+          </span>
         </Link>
       </div>
 
-      <footer className="text-xs text-neutral-400 text-center leading-relaxed mt-10">
+      <footer className="text-xs text-center leading-relaxed mt-10 text-[color:var(--w-label-assistive)]">
         {t(lang, "footerDisclaimer")}
       </footer>
     </main>

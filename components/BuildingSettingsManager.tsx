@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { BuildingSettings, DAY_LABELS } from "@/lib/buildingSettings";
 import { RECYCLING_DAYS } from "@/lib/data/categories";
+import { SettingsIcon } from "@/components/icons";
 
 async function translate(text: string): Promise<{ en: string; zh: string; vi: string }> {
   const res = await fetch("/api/translate", {
@@ -77,19 +78,25 @@ export function BuildingSettingsManager({ userId }: { userId: string }) {
   };
 
   return (
-    <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
-      <h2 className="font-bold mb-1 flex items-center gap-1.5">
-        <span>🚦</span> 오늘의 배출 신호등 · 공지 배너 설정
+    <section
+      className="rounded-2xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-5"
+      style={{ boxShadow: "var(--w-shadow-normal)" }}
+    >
+      <h2 className="font-bold mb-1 flex items-center gap-1.5 text-[color:var(--w-label-normal)]">
+        <span style={{ color: "var(--w-primary)" }}>
+          <SettingsIcon size={20} />
+        </span>{" "}
+        오늘의 배출 신호등 · 공지 배너 설정
       </h2>
-      <p className="text-xs text-neutral-500 mb-3">
+      <p className="text-xs text-[color:var(--w-label-alt)] mb-3">
         우리 건물에서 재활용을 배출할 수 있는 요일과, 세입자 화면 상단에
         띄울 공지·주의사항 배너를 설정하세요.
       </p>
       {loading ? (
-        <p className="text-sm text-neutral-400">불러오는 중...</p>
+        <p className="text-sm text-[color:var(--w-label-assistive)]">불러오는 중...</p>
       ) : (
         <>
-          <p className="text-xs font-semibold text-neutral-500 mb-2">배출 요일</p>
+          <p className="text-xs font-semibold text-[color:var(--w-label-alt)] mb-2">배출 요일</p>
           <div className="flex gap-2 mb-4">
             {DAY_LABELS.map((label, i) => (
               <button
@@ -97,8 +104,8 @@ export function BuildingSettingsManager({ userId }: { userId: string }) {
                 onClick={() => toggleDay(i)}
                 className={`w-10 h-10 rounded-full text-sm font-semibold border transition-colors ${
                   days.includes(i)
-                    ? "bg-green-600 text-white border-green-600"
-                    : "bg-white text-neutral-600 border-neutral-300 hover:border-green-400"
+                    ? "bg-[color:var(--w-primary)] text-white border-[color:var(--w-primary)]"
+                    : "bg-[color:var(--w-bg-card)] text-[color:var(--w-label-neutral)] border-[color:var(--w-line)] hover:border-[color:var(--w-primary)]"
                 }`}
               >
                 {label}
@@ -106,7 +113,7 @@ export function BuildingSettingsManager({ userId }: { userId: string }) {
             ))}
           </div>
 
-          <p className="text-xs font-semibold text-neutral-500 mb-2">
+          <p className="text-xs font-semibold text-[color:var(--w-label-alt)] mb-2">
             공지 배너 (선택, 신호등 위에 표시됩니다)
           </p>
           <textarea
@@ -117,19 +124,19 @@ export function BuildingSettingsManager({ userId }: { userId: string }) {
             }}
             rows={2}
             placeholder="예: 이번 주 목요일 오전 단수 예정입니다. 비워두면 배너가 표시되지 않습니다."
-            className="w-full rounded-lg border border-neutral-300 p-3 text-sm mb-4 resize-none"
+            className="w-full rounded-xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-3 text-sm text-[color:var(--w-label-normal)] mb-4 resize-none"
           />
 
-          {error && <p className="text-sm text-red-600 mb-2">{error}</p>}
+          {error && <p className="text-sm text-[color:var(--w-status-negative)] mb-2">{error}</p>}
           <button
             onClick={handleSave}
             disabled={saving}
-            className="px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-semibold hover:bg-green-700 disabled:opacity-50 transition-colors"
+            className="px-4 py-2 rounded-xl bg-[color:var(--w-primary)] text-white text-sm font-semibold hover:bg-[color:var(--w-primary-strong)] disabled:opacity-50 transition-colors"
           >
             {saving ? "저장 중..." : "저장"}
           </button>
           {saved && (
-            <span className="ml-3 text-sm text-neutral-500">저장되었습니다</span>
+            <span className="ml-3 text-sm text-[color:var(--w-label-alt)]">저장되었습니다</span>
           )}
         </>
       )}

@@ -8,6 +8,7 @@ import { RECYCLING_DAYS } from "@/lib/data/categories";
 import { useBuilding } from "@/lib/building-context";
 import { createClient } from "@/lib/supabase/client";
 import { BuildingSettings } from "@/lib/buildingSettings";
+import { MegaphoneIcon } from "@/components/icons";
 
 export function SignalLight({ lang }: { lang: Lang }) {
   const { buildingId, ready } = useBuilding();
@@ -49,21 +50,21 @@ export function SignalLight({ lang }: { lang: Lang }) {
   }, [buildingId, ready, lang]);
 
   if (green === null) {
-    return (
-      <div className="rounded-2xl border border-neutral-200 bg-white p-5 animate-pulse h-28 shadow-sm" />
-    );
+    return <div className="rounded-2xl bg-[color:var(--w-fill)] animate-pulse h-28" />;
   }
 
   // 집주인이 공지 배너를 설정해두면, 이 칸이 신호등 대신 공지 배너로 표시됩니다.
   if (banner) {
     return (
-      <div className="rounded-2xl p-5 flex items-start gap-3 border bg-amber-50 border-amber-300 shadow-sm">
-        <div className="text-3xl leading-none">📢</div>
+      <div className="rounded-2xl p-5 flex items-start gap-3 bg-[color:var(--w-status-caution-wash)]">
+        <span className="shrink-0 mt-0.5 text-[color:var(--w-status-caution)]">
+          <MegaphoneIcon size={28} />
+        </span>
         <div className="flex-1">
-          <p className="text-xs font-bold uppercase tracking-wide text-amber-700">
+          <p className="text-xs font-bold uppercase tracking-wide text-[color:var(--w-status-caution)]">
             공지
           </p>
-          <p className="text-sm text-amber-900 whitespace-pre-line mt-1 leading-relaxed">
+          <p className="text-sm whitespace-pre-line mt-1 leading-relaxed text-[color:var(--w-label-normal)]">
             {banner}
           </p>
         </div>
@@ -73,19 +74,27 @@ export function SignalLight({ lang }: { lang: Lang }) {
 
   return (
     <div
-      className={`rounded-2xl p-5 flex items-center gap-4 border shadow-sm ${
-        green ? "bg-green-50 border-green-300" : "bg-red-50 border-red-300"
-      }`}
+      className="rounded-2xl p-5 flex items-center gap-4 border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)]"
+      style={{ boxShadow: "var(--w-shadow-normal)" }}
     >
-      <div className="text-5xl leading-none">{green ? "🟢" : "🔴"}</div>
+      <span
+        className={`w-2.5 h-2.5 rounded-full shrink-0 ${
+          green ? "bg-[color:var(--w-status-positive)]" : "bg-[color:var(--w-status-negative)]"
+        }`}
+        aria-hidden
+      />
       <div className="flex-1">
-        <p className="text-xs font-bold uppercase tracking-wide text-neutral-500">
+        <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--w-label-alt)]">
           {t(lang, "todaySignalTitle")}
         </p>
-        <p className="font-extrabold text-lg mt-0.5">
+        <p
+          className={`font-extrabold text-lg mt-0.5 ${
+            green ? "text-[color:var(--w-status-positive)]" : "text-[color:var(--w-status-negative)]"
+          }`}
+        >
           {green ? t(lang, "todayGreen") : t(lang, "todayRed")}
         </p>
-        <p className="text-sm text-neutral-600 mt-1">{t(lang, "generalWasteNote")}</p>
+        <p className="text-sm mt-1 text-[color:var(--w-label-alt)]">{t(lang, "generalWasteNote")}</p>
       </div>
     </div>
   );

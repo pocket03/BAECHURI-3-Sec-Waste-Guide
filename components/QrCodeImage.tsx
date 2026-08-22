@@ -30,7 +30,7 @@ export function QrCodeImage({
     return (
       <div
         style={{ width: size, height: size }}
-        className="rounded-lg bg-neutral-100 animate-pulse"
+        className="rounded-lg bg-[color:var(--w-fill)] animate-pulse"
       />
     );
   }
@@ -43,12 +43,12 @@ export function QrCodeImage({
         alt="QR code"
         width={size}
         height={size}
-        className="rounded-lg border border-neutral-200 shadow-sm"
+        className="rounded-lg border border-[color:var(--w-line)] shadow-sm"
       />
       <a
         href={dataUrl}
         download={fileName}
-        className="text-sm font-medium text-green-700 underline underline-offset-2"
+        className="text-sm font-medium text-[color:var(--w-primary)] underline underline-offset-2"
       >
         {downloadLabel}
       </a>

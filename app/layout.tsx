@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="antialiased bg-neutral-50 text-neutral-900 min-h-screen">
+      <body className="antialiased min-h-screen" style={{ background: "var(--w-bg-page)", color: "var(--w-label-normal)" }}>
         <LanguageProvider>
           <BuildingProvider>{children}</BuildingProvider>
         </LanguageProvider>

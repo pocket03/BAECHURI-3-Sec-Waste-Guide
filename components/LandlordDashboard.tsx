@@ -16,6 +16,19 @@ import { FaqManager } from "@/components/FaqManager";
 import { NoticeManager } from "@/components/NoticeManager";
 import { InquiryManager } from "@/components/InquiryManager";
 import { LogoutButton } from "@/components/LogoutButton";
+import { BrandMark } from "@/components/BrandMark";
+import {
+  SendIcon,
+  MegaphoneIcon,
+  BubbleIcon,
+  MailIcon,
+  PeopleIcon,
+  SettingsIcon,
+  EyeIcon,
+  LocationPinIcon,
+} from "@/components/icons";
+
+const SIMPLE_UI_STORAGE_KEY = "baechuri-simple-ui";
 
 const GROUP_ORDER: TemplateGroup[] = ["trash", "moveout", "notice"];
 const GROUP_LABEL_KEY = {
@@ -25,12 +38,12 @@ const GROUP_LABEL_KEY = {
 } as const;
 
 const TABS = [
-  { key: "send", icon: "📤", label: "발송" },
-  { key: "notices", icon: "📋", label: "공지사항" },
-  { key: "faq", icon: "💬", label: "FAQ" },
-  { key: "inquiries", icon: "📮", label: "문의" },
-  { key: "tenants", icon: "👥", label: "세입자" },
-  { key: "settings", icon: "⚙️", label: "건물 설정" },
+  { key: "send", Icon: SendIcon, label: "발송" },
+  { key: "notices", Icon: MegaphoneIcon, label: "공지사항" },
+  { key: "faq", Icon: BubbleIcon, label: "FAQ" },
+  { key: "inquiries", Icon: MailIcon, label: "문의" },
+  { key: "tenants", Icon: PeopleIcon, label: "세입자" },
+  { key: "settings", Icon: SettingsIcon, label: "건물 설정" },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
@@ -52,6 +65,21 @@ export function LandlordDashboard({
     setOrigin(window.location.origin);
   }, []);
 
+  const [simple, setSimple] = useState(false);
+  useEffect(() => {
+    const stored = window.localStorage.getItem(SIMPLE_UI_STORAGE_KEY);
+    if (stored === "1") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSimple(true);
+    }
+  }, []);
+
+  const toggleSimple = () => {
+    const next = !simple;
+    setSimple(next);
+    window.localStorage.setItem(SIMPLE_UI_STORAGE_KEY, next ? "1" : "0");
+  };
+
   const noticeLink = `${origin}/result?notice=${selected.id}`;
   const siteQrLink = `${origin}/result?place=${PLACES[0].id}`;
 
@@ -67,52 +95,104 @@ export function LandlordDashboard({
   }, [selected, noticeLink]);
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 py-8">
-        <header className="mb-6 flex items-start justify-between gap-3">
+        <header className="mb-6 flex flex-wrap items-start justify-between gap-3">
           <div className="flex items-start gap-2">
-            <span className="text-2xl shrink-0 mt-0.5">🥬</span>
+            <BrandMark size={32} className="shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-semibold text-green-700">
+              <p className="text-sm font-semibold text-[color:var(--w-label-normal)]">
                 {t("ko", "brand")}
               </p>
-              <h1 className="text-2xl font-extrabold mt-1">{t("ko", "landlordTitle")}</h1>
-              <p className="text-neutral-500 mt-1 text-xs">{userEmail}로 로그인됨</p>
+              <h1 className="text-2xl font-extrabold mt-1 text-[color:var(--w-label-neutral)]">
+                {t("ko", "landlordTitle")}
+              </h1>
+              <p className="text-[color:var(--w-label-alt)] mt-1 text-xs">{userEmail}로 로그인됨</p>
             </div>
           </div>
-          <LogoutButton />
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold text-[color:var(--w-label-normal)]">
+                간편 UI 모드
+              </span>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={simple}
+                onClick={toggleSimple}
+                className="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-200"
+                style={{
+                  backgroundColor: simple ? "var(--w-primary)" : "var(--w-fill)",
+                }}
+              >
+                <span
+                  className="inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-200"
+                  style={{
+                    transform: simple ? "translateX(22px)" : "translateX(2px)",
+                  }}
+                />
+              </button>
+            </div>
+            <LogoutButton />
+          </div>
         </header>
 
-        <nav className="mb-8 flex gap-1 overflow-x-auto border-b border-neutral-200">
-          {TABS.map((item) => (
-            <button
-              key={item.key}
-              onClick={() => setTab(item.key)}
-              className={`shrink-0 flex items-center gap-1.5 px-4 py-3 text-sm font-semibold border-b-2 transition-colors ${
-                tab === item.key
-                  ? "border-green-600 text-green-700"
-                  : "border-transparent text-neutral-500 hover:text-neutral-800"
-              }`}
-            >
-              <span>{item.icon}</span>
-              {item.label}
-            </button>
-          ))}
-        </nav>
+        {simple ? (
+          <div className="mb-8 grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {TABS.map((item) => (
+              <button
+                key={item.key}
+                onClick={() => setTab(item.key)}
+                className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-6 transition-colors hover:bg-[color:var(--w-fill)]"
+                style={{ boxShadow: "var(--w-shadow-normal)" }}
+              >
+                <span style={{ color: "var(--w-primary)" }}>
+                  <item.Icon size={28} />
+                </span>
+                <span className="text-[17px] font-semibold text-[color:var(--w-label-normal)]">
+                  {item.label}
+                </span>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <nav className="mb-8 flex gap-1 overflow-x-auto border-b border-[color:var(--w-line)]">
+            {TABS.map((item) => (
+              <button
+                key={item.key}
+                onClick={() => setTab(item.key)}
+                className={`shrink-0 flex items-center gap-1.5 px-4 py-3 text-sm font-semibold border-b-2 transition-colors ${
+                  tab === item.key
+                    ? "border-[color:var(--w-primary)] text-[color:var(--w-primary)]"
+                    : "border-transparent text-[color:var(--w-label-alt)] hover:text-[color:var(--w-label-neutral)]"
+                }`}
+              >
+                <item.Icon size={18} />
+                {item.label}
+              </button>
+            ))}
+          </nav>
+        )}
 
         {tab === "send" && (
           <div className="grid lg:grid-cols-2 gap-6 items-start">
             <div className="flex flex-col gap-6">
-              <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
-                <h2 className="font-bold mb-1 flex items-center gap-1.5">
-                  <span>📤</span> 알림톡 템플릿 선택
+              <section
+                className="rounded-2xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-5"
+                style={{ boxShadow: "var(--w-shadow-normal)" }}
+              >
+                <h2 className="font-bold mb-1 flex items-center gap-1.5 text-[color:var(--w-label-normal)]">
+                  <span style={{ color: "var(--w-primary)" }}>
+                    <SendIcon size={20} />
+                  </span>{" "}
+                  알림톡 템플릿 선택
                 </h2>
-                <p className="text-xs text-neutral-500 mb-4">
+                <p className="text-xs text-[color:var(--w-label-alt)] mb-4">
                   {t("ko", "landlordSubtitle")}
                 </p>
                 {GROUP_ORDER.map((group) => (
                   <div key={group} className="mb-4 last:mb-0">
-                    <h3 className="text-xs font-bold text-neutral-500 mb-2">
+                    <h3 className="text-xs font-bold text-[color:var(--w-label-alt)] mb-2">
                       {t("ko", GROUP_LABEL_KEY[group])}
                     </h3>
                     <div className="flex flex-wrap gap-2">
@@ -122,8 +202,8 @@ export function LandlordDashboard({
                           onClick={() => setSelectedId(tpl.id)}
                           className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
                             tpl.id === selectedId
-                              ? "bg-green-600 text-white border-green-600"
-                              : "bg-white text-neutral-700 border-neutral-300 hover:border-green-400"
+                              ? "bg-[color:var(--w-primary)] text-white border-[color:var(--w-primary)]"
+                              : "bg-[color:var(--w-bg-card)] text-[color:var(--w-label-neutral)] border-[color:var(--w-line)] hover:border-[color:var(--w-primary)]"
                           }`}
                         >
                           {tpl.title.ko}
@@ -138,10 +218,16 @@ export function LandlordDashboard({
             </div>
 
             <div className="flex flex-col gap-6">
-              <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+              <section
+                className="rounded-2xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-5"
+                style={{ boxShadow: "var(--w-shadow-normal)" }}
+              >
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="font-bold flex items-center gap-1.5">
-                    <span>👁️</span> {t("ko", "previewTitle")}
+                  <h2 className="font-bold flex items-center gap-1.5 text-[color:var(--w-label-normal)]">
+                    <span style={{ color: "var(--w-primary)" }}>
+                      <EyeIcon size={20} />
+                    </span>{" "}
+                    {t("ko", "previewTitle")}
                   </h2>
                   <CopyButton
                     text={combinedMessage}
@@ -155,17 +241,23 @@ export function LandlordDashboard({
                   </div>
                 </div>
                 {selected.legalNotice && (
-                  <p className="text-xs text-neutral-500 mt-2">
+                  <p className="text-xs text-[color:var(--w-label-alt)] mt-2">
                     {t("ko", "legalNoticeInline")}
                   </p>
                 )}
               </section>
 
-              <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
-                <h2 className="font-bold mb-1 flex items-center gap-1.5">
-                  <span>📍</span> {t("ko", "siteQrSectionTitle")}
+              <section
+                className="rounded-2xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-5"
+                style={{ boxShadow: "var(--w-shadow-normal)" }}
+              >
+                <h2 className="font-bold mb-1 flex items-center gap-1.5 text-[color:var(--w-label-normal)]">
+                  <span style={{ color: "var(--w-primary)" }}>
+                    <LocationPinIcon size={20} />
+                  </span>{" "}
+                  {t("ko", "siteQrSectionTitle")}
                 </h2>
-                <p className="text-xs text-neutral-500 mb-3">
+                <p className="text-xs text-[color:var(--w-label-alt)] mb-3">
                   {t("ko", "siteQrSectionDesc")}
                 </p>
                 <QrCodeImage
@@ -190,7 +282,7 @@ export function LandlordDashboard({
           </div>
         )}
 
-        <p className="text-xs text-neutral-400 text-center mt-10">
+        <p className="text-xs text-[color:var(--w-label-assistive)] text-center mt-10">
           {t("ko", "demoModeNotice")}
         </p>
       </div>

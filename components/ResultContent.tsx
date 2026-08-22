@@ -13,6 +13,7 @@ import { CATEGORIES } from "@/lib/data/categories";
 import { TenantHeader } from "@/components/TenantHeader";
 import { createClient } from "@/lib/supabase/client";
 import { Notice } from "@/lib/notices";
+import { ArrowLeftIcon, ExclamationTriangleIcon } from "@/components/icons";
 
 function noticeBodyForLang(notice: Notice, lang: Lang): string {
   const byLang: Record<Lang, string | null> = {
@@ -34,12 +35,13 @@ function PageShell({ children }: { children: React.ReactNode }) {
       <div className="mt-8">
         <Link
           href="/search"
-          className="text-sm font-semibold text-green-700 underline underline-offset-2"
+          className="inline-flex items-center gap-1 text-sm font-semibold underline underline-offset-2 text-[color:var(--w-primary)]"
         >
-          {t(lang, "backToSearchButton")}
+          <ArrowLeftIcon size={16} />
+          {t(lang, "backToSearchButton").replace(/^←\s*/, "")}
         </Link>
       </div>
-      <footer className="text-xs text-neutral-400 text-center leading-relaxed mt-10">
+      <footer className="text-xs text-center leading-relaxed mt-10 text-[color:var(--w-label-assistive)]">
         {t(lang, "footerDisclaimer")}
       </footer>
     </main>
@@ -61,41 +63,49 @@ export function ResultContent() {
     const category = CATEGORIES[item.category];
     return (
       <PageShell>
-        <div className="rounded-3xl border border-neutral-200 bg-white shadow-sm p-6 text-center">
+        <div
+          className="rounded-3xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-6 text-center"
+          style={{ boxShadow: "var(--w-shadow-normal)" }}
+        >
           <div className="text-6xl mb-3">{item.icon}</div>
           <h1 className="text-xl font-extrabold mb-2">{item.name[lang]}</h1>
           <span
             className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-4 ${
               category.recyclable
-                ? "bg-green-100 text-green-800"
-                : "bg-neutral-200 text-neutral-700"
+                ? "bg-[color:var(--w-status-positive-wash)] text-[color:var(--w-status-positive)]"
+                : "bg-[color:var(--w-fill)] text-[color:var(--w-label-neutral)]"
             }`}
           >
             {category.label[lang]} ·{" "}
             {category.recyclable ? t(lang, "recyclableYes") : t(lang, "recyclableNo")}
           </span>
 
-          <div className="text-left rounded-2xl bg-neutral-50 p-4 mb-3">
-            <p className="text-xs font-semibold text-neutral-500 mb-1">
+          <div className="text-left rounded-xl p-4 mb-3 bg-[color:var(--w-fill)]">
+            <p className="text-xs font-semibold mb-1 text-[color:var(--w-label-alt)]">
               {t(lang, "categoryLabel")}
             </p>
-            <p className="text-sm leading-relaxed">{category.guide[lang]}</p>
+            <p className="text-sm leading-relaxed text-[color:var(--w-label-normal)]">{category.guide[lang]}</p>
           </div>
 
           {item.note && (
-            <div className="text-left rounded-2xl bg-amber-50 border border-amber-200 p-4 mb-3">
-              <p className="text-xs font-semibold text-amber-700 mb-1">
-                {t(lang, "noteLabel")}
-              </p>
-              <p className="text-sm leading-relaxed text-amber-900">{item.note[lang]}</p>
+            <div className="text-left rounded-xl p-4 mb-3 flex gap-2 items-start bg-[color:var(--w-status-caution-wash)]">
+              <span className="shrink-0 mt-0.5 text-[color:var(--w-status-caution)]">
+                <ExclamationTriangleIcon size={16} />
+              </span>
+              <div>
+                <p className="text-xs font-semibold mb-1 text-[color:var(--w-status-caution)]">
+                  {t(lang, "noteLabel").replace(/^⚠️\s*/u, "")}
+                </p>
+                <p className="text-sm leading-relaxed text-[color:var(--w-label-normal)]">{item.note[lang]}</p>
+              </div>
             </div>
           )}
 
-          <div className="text-left rounded-2xl bg-neutral-50 p-4">
-            <p className="text-xs font-semibold text-neutral-500 mb-1">
+          <div className="text-left rounded-xl p-4 bg-[color:var(--w-fill)]">
+            <p className="text-xs font-semibold mb-1 text-[color:var(--w-label-alt)]">
               {t(lang, "disposalDaysLabel")}
             </p>
-            <p className="text-sm leading-relaxed">
+            <p className="text-sm leading-relaxed text-[color:var(--w-label-normal)]">
               {category.recyclable
                 ? t(lang, "disposalDaysRecyclable")
                 : t(lang, "disposalDaysGeneral")}
@@ -111,20 +121,23 @@ export function ResultContent() {
     if (!place) return <PageShell><NotFound lang={lang} /></PageShell>;
     return (
       <PageShell>
-        <div className="rounded-3xl border border-neutral-200 bg-white shadow-sm p-6">
+        <div
+          className="rounded-3xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-6"
+          style={{ boxShadow: "var(--w-shadow-normal)" }}
+        >
           <div className="text-5xl mb-3 text-center">📍</div>
           <h1 className="text-xl font-extrabold text-center mb-2">{place.name[lang]}</h1>
-          <p className="text-sm text-neutral-600 text-center mb-5">
+          <p className="text-sm text-center mb-5 text-[color:var(--w-label-neutral)]">
             {place.description[lang]}
           </p>
-          <p className="text-xs font-semibold text-neutral-500 mb-2">
+          <p className="text-xs font-semibold mb-2 text-[color:var(--w-label-alt)]">
             {t(lang, "placeAcceptedCategories")}
           </p>
           <div className="flex flex-wrap gap-2">
             {place.categories.map((c) => (
               <span
                 key={c}
-                className="px-3 py-1.5 rounded-full text-xs font-bold bg-green-100 text-green-800"
+                className="px-3 py-1.5 rounded-full text-xs font-bold bg-[color:var(--w-primary-wash)] text-[color:var(--w-primary)]"
               >
                 {CATEGORIES[c].label[lang]}
               </span>
@@ -140,14 +153,17 @@ export function ResultContent() {
     if (!template) return <PageShell><NotFound lang={lang} /></PageShell>;
     return (
       <PageShell>
-        <div className="rounded-3xl border border-neutral-200 bg-white shadow-sm p-6">
+        <div
+          className="rounded-3xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-6"
+          style={{ boxShadow: "var(--w-shadow-normal)" }}
+        >
           <div className="text-4xl mb-3 text-center">📢</div>
           <h1 className="text-xl font-extrabold text-center mb-4">{template.title[lang]}</h1>
-          <div className="rounded-2xl bg-neutral-50 p-4 text-sm leading-relaxed whitespace-pre-line">
+          <div className="rounded-xl p-4 text-sm leading-relaxed whitespace-pre-line bg-[color:var(--w-fill)] text-[color:var(--w-label-normal)]">
             {template.body[lang]}
           </div>
           {template.legalNotice && (
-            <p className="text-xs text-neutral-500 mt-3">{LEGAL_NOTICE_TEXT[lang]}</p>
+            <p className="text-xs mt-3 text-[color:var(--w-label-alt)]">{LEGAL_NOTICE_TEXT[lang]}</p>
           )}
         </div>
       </PageShell>
@@ -183,7 +199,10 @@ function CustomNoticeResult({ id, lang }: { id: string; lang: Lang }) {
   if (notice === undefined) {
     return (
       <PageShell>
-        <div className="rounded-3xl border border-neutral-200 bg-white shadow-sm p-10 text-center text-neutral-400 animate-pulse">
+        <div
+          className="rounded-3xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-10 text-center animate-pulse text-[color:var(--w-label-alt)]"
+          style={{ boxShadow: "var(--w-shadow-normal)" }}
+        >
           ...
         </div>
       </PageShell>
@@ -200,10 +219,13 @@ function CustomNoticeResult({ id, lang }: { id: string; lang: Lang }) {
 
   return (
     <PageShell>
-      <div className="rounded-3xl border border-neutral-200 bg-white shadow-sm p-6">
+      <div
+        className="rounded-3xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-6"
+        style={{ boxShadow: "var(--w-shadow-normal)" }}
+      >
         <div className="text-4xl mb-3 text-center">📢</div>
         <h1 className="text-xl font-extrabold text-center mb-4">{notice.title}</h1>
-        <div className="rounded-2xl bg-neutral-50 p-4 text-sm leading-relaxed whitespace-pre-line">
+        <div className="rounded-xl p-4 text-sm leading-relaxed whitespace-pre-line bg-[color:var(--w-fill)] text-[color:var(--w-label-normal)]">
           {noticeBodyForLang(notice, lang)}
         </div>
       </div>
@@ -213,7 +235,10 @@ function CustomNoticeResult({ id, lang }: { id: string; lang: Lang }) {
 
 function NotFound({ lang }: { lang: ReturnType<typeof useLanguage>["lang"] }) {
   return (
-    <div className="rounded-3xl border border-neutral-200 bg-white shadow-sm p-10 text-center text-neutral-500">
+    <div
+      className="rounded-3xl border border-[color:var(--w-line)] bg-[color:var(--w-bg-card)] p-10 text-center text-[color:var(--w-label-alt)]"
+      style={{ boxShadow: "var(--w-shadow-normal)" }}
+    >
       {t(lang, "notFoundTitle")}
     </div>
   );
