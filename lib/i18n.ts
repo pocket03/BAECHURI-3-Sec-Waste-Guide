@@ -169,6 +169,12 @@ export const STRINGS = {
     zh: "点击物品图标",
     vi: "Nhấn vào biểu tượng vật phẩm",
   },
+  itemDotLegend: {
+    ko: "분리수거 가능",
+    en: "Recyclable",
+    zh: "可回收",
+    vi: "Có thể tái chế",
+  },
   changeLanguageButton: {
     ko: "언어 변경",
     en: "Change language",

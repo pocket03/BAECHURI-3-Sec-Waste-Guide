@@ -10,12 +10,21 @@ import { SearchIcon } from "@/components/icons";
 export function ItemGrid({ lang }: { lang: Lang }) {
   return (
     <div>
-      <h2 className="font-bold text-base mb-3 flex items-center gap-1.5">
-        <span className="text-[color:var(--w-label-neutral)]">
-          <SearchIcon size={18} />
-        </span>
-        {t(lang, "itemGridTitle")}
-      </h2>
+      <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
+        <h2 className="font-bold text-base flex items-center gap-1.5">
+          <span className="text-[color:var(--w-label-neutral)]">
+            <SearchIcon size={18} />
+          </span>
+          {t(lang, "itemGridTitle")}
+        </h2>
+        <div className="flex items-center gap-1.5 text-xs text-[color:var(--w-label-alt)]">
+          <span
+            className="w-1.5 h-1.5 rounded-full bg-[color:var(--w-status-positive)] shrink-0"
+            aria-hidden
+          />
+          {t(lang, "itemDotLegend")}
+        </div>
+      </div>
       <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
         {ITEMS.map((item) => {
           const recyclable = CATEGORIES[item.category].recyclable;
